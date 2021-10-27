@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 /.env
+/testkey
+/testkey.pub
 .pnp.js
 
 # testing
