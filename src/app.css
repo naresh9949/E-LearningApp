@@ -1,0 +1,33 @@
+::-webkit-scrollbar{
+    width: 0px;
+}
+
+.container{
+    display: flex;
+    overflow-x: scroll;
+    width:100%;
+}
+.card{
+    flex-shrink: 0;
+    width: 300px;
+    height: 270px;
+    border-radius: 10px;
+    margin-left: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+
+/* home banner */
+.mainheading{
+    color: cornflowerblue;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.homebutton{
+    background-color: darkorchid;
+    font-family: Verdana;
+    font-size: xx-large;
+}
