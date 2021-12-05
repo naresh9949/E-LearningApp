@@ -1,28 +1,44 @@
-import React, { Component } from 'react'
-import Card from './Card'
-import './../app.css'
+import React from 'react'
+import { Container } from "@mui/material";
+import CourseRow from './CoursesRow';
 import Chip from '@mui/material/Chip';
-import { Container } from '@mui/material'
-import Typography from '@mui/material/Typography';
-const Courses = ()=>{
-  return (
-    <Container>
-      <Typography gutterBottom variant="h5" component="div">
-          Courses &nbsp;<Chip label="65" />
-        </Typography>
-    <div className="container">
-      <Card url="https://uploads-ssl.webflow.com/5f841209f4e71b2d70034471/6078b650748b8558d46ffb7f_Flutter%20app%20development.png"/>
-      <Card url="https://appinventiv.com/wp-content/uploads/sites/1/2019/08/How-Much-Does-React-Native-App-Development-Costs.png"/>
-      <Card url="https://image.freepik.com/free-vector/cryptographic-officer-system-administrator-create-algorithm-code-key-owner-blockchain-cryptography-encryption-algorithm-concept_335657-1835.jpg"/>
-      <Card url="data:image/jpeg;base64,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"/>
-      <Card url=""/>
-      <Card url=""/>
-      <Card url=""/>
+import Stack from '@mui/material/Stack';
 
-      
-    </div>
+const Chips = ()=> {
+  const handleClick = () => {
+    console.info('You clicked the Chip.');
+  };
+
+  return (
+    <Container className="category-chips" sx={{padding:2}}>
+    <p className="categories">categories</p>
+    <Stack direction="row" spacing={1} sx={{overflow:'scroll'}}>
+      <Chip className="chip" label="MOBILE APPLICATION DEVELOPMENT" onClick={handleClick} />
+      <Chip className="chip" label="WEB DEVELOPMENT" onClick={handleClick} />
+      <Chip className="chip" label="CS FUNDAMENTALS" onClick={handleClick} />
+      <Chip className="chip" label="SPOKEN ENGLISH" onClick={handleClick} />
+      <Chip className="chip" label="DATA BASES" onClick={handleClick} />
+      <Chip className="chip" label="PROGRAMMING LANGUAGES" onClick={handleClick} />
+      <Chip className="chip" label="DEVOPS" onClick={handleClick} />
+      <Chip className="chip" label="CLOUD COMPUTING" onClick={handleClick} />
+    </Stack>
     </Container>
-  )
+  );
 }
 
-export default Courses;
+
+
+function Courses() {
+    return (
+        <Container sx={{paddingTop:2}}>
+            <Chips/>
+            <CourseRow category="Popular Courses" number={14}/>
+            <CourseRow category="Web Development" number={22}/>
+            <CourseRow category="Mobile Application Development" number={3}/>
+            <CourseRow category="CS Fundamentals" number={15}/>
+            <CourseRow category="Web Development" number={23}/>
+        </Container>
+    )
+}
+
+export default Courses

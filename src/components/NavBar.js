@@ -4,6 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import Button from '@mui/material/Button';
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
@@ -15,7 +16,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-
+import Link from "@mui/material/Link";
+import logo from "./../images/logo.png";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -162,18 +164,19 @@ export default function PrimarySearchAppBar() {
         sx={{ backgroundColor: "white", color: "black" }}
       >
         <Toolbar>
-        <Avatar
-                alt="logo"
-                src="https://cdn.psychologytoday.com/sites/default/files/styles/article-inline-half-caption/public/field_blog_entry_images/2019-06/instagram-1581266_1920.jpg?itok=zDU0dCxe"
-              />
+          <Avatar
+            alt="logo"
+            src={logo}
+          />
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ display: { xs: "none", sm: "block" } }}
           >
-            Ls Academy
+            RJ Academy
           </Typography>
+          
           {/* <CardMedia
             sx={{
               display: { xs: "none", sm: "block" },
@@ -194,25 +197,17 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+          <Link href="/courses" underline="none" sx={{marginRight:4,display: { xs: "none", sm: "block" },color: "black"}}>
+            Courses
+          </Link>
+          <Link href="#" underline="none" sx={{marginRight:4,display: { xs: "none", sm: "block" }}}>
+            About us
+          </Link>
+          <Link href="#" underline="none" sx={{marginRight:4,display: { xs: "none", sm: "block" }}}>
+            Contact us
+          </Link>
+          
+          {/* <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               edge="end"
@@ -222,12 +217,14 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <Avatar
-                alt="Remy Sharp"
-                src="https://img.republicworld.com/republic-prod/stories/promolarge/xhdpi/0u8dtpcynalmhmui_1601366398.jpeg"
-              />
+              <Avatar sx={{ bgcolor: 'black' }}>NK</Avatar>
             </IconButton>
-          </Box>
+          </Box> */}
+
+         
+          <Link href="/signin" underline="none" className="nav-signs">SIGN IN</Link>
+
+
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -240,6 +237,7 @@ export default function PrimarySearchAppBar() {
               <MoreIcon />
             </IconButton>
           </Box>
+
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
