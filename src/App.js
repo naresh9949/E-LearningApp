@@ -4,9 +4,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
-import CoursePlayer from "./components/CoursePlayer";
+import CoursePlayer from "./components/courses/CoursePlayer";
 import { Container } from "@mui/material";
-import Courses from './components/Courses';
+import Courses from './components/courses/Courses';
 import SearchList from './components/SearchList';
 import Footer from "./components/Footer";
 import MyAccout from './components/MyAccout'
@@ -15,9 +15,10 @@ import Signup from './components/Signup'
 import MyEnrollments from './components/MyEnrollments';
 import ContactUs from './components/Contactus';
 import UploadScreen from './components/UploadScreen';
-import CourseDetails from './components/CourseDetails';
+import CourseDetails from './components/courses/CourseDetails';
 import Quiz from './components/Quiz/Quiz';
 import CreateQuiz from './components/Quiz/CreateQuiz';
+import ForgotPassword from './components/Auth/ForgotPassword';
 
 const getUrl = () => {
   console.log(window.location.pathname)
@@ -101,7 +102,7 @@ if(url === "/contactus")
 function App() {
   var login = true;
   const url = getUrl();
-  if(url==="/signup" || url==="/signin")
+  if(url==="/signup" || url==="/signin" || url==='/ForgotPassword')
   login = false;
 
   return (
@@ -116,6 +117,7 @@ function App() {
           <Route path="/contactus" element={<ContactUs/>} />
           <Route path="/signin" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
+          <Route path="/ForgotPassword" element={<ForgotPassword/>} />
           <Route path="/my-enrollments" element={<MyEnrollments/>} />
           <Route path="/user/account" element={<MyAccout/>} />
           <Route path="/courseplayer" element={<CoursePlayer />} />

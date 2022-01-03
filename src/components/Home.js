@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import Courses from "./CoursesRow";
+import Courses from "./courses/CoursesRow";
 import { Container } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeCard from "./HomeCard";
@@ -15,9 +15,9 @@ import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
-import {CardActionArea } from '@mui/material';
+import Link from "@mui/material/Link";
+import Card from "@mui/material/Card";
+import { CardActionArea } from "@mui/material";
 import "./../app.css";
 
 const steps = [
@@ -52,80 +52,74 @@ const HomeStepper = () => {
   };
 
   return (
-    <Container>
-      <Container>
+    <div className="main-div">
+      <h3 className="home-titles">Why Choose Us?</h3>
+      <p className="paragraph">
         <Container>
-          <Container>
-            <h3 className="home-titles">Why Choose Us?</h3>
-            <p className="paragraph">
-              There can be hundreds of reasons but here we will give you top
-              three reasons to choose us.
-            </p>
-
-            <Box sx={{ maxWidth: 900 }}>
-              <Stepper activeStep={activeStep} orientation="vertical">
-                {steps.map((step, index) => (
-                  <Step key={step.label}>
-                    <StepLabel
-                      optional={
-                        index === 2 ? (
-                          <Typography variant="caption">Last step</Typography>
-                        ) : null
-                      }
-                    >
-                      <h2 className="subtitle m-0">{step.label}</h2>
-                    </StepLabel>
-                    <StepContent>
-                      <p className="paragraph">{step.description}</p>
-                      <Box sx={{ mb: 2 }}>
-                        <div>
-                          <Button
-                            variant="contained"
-                            onClick={handleNext}
-                            sx={{ mt: 1, mr: 1 }}
-                          >
-                            {index === steps.length - 1 ? "Finish" : "Continue"}
-                          </Button>
-                          <Button
-                            disabled={index === 0}
-                            onClick={handleBack}
-                            sx={{ mt: 1, mr: 1 }}
-                          >
-                            Back
-                          </Button>
-                        </div>
-                      </Box>
-                    </StepContent>
-                  </Step>
-                ))}
-              </Stepper>
-              {activeStep === steps.length && (
-                <Paper square elevation={0} sx={{ p: 3 }}>
-                  <Typography>
-                    All steps completed - you&apos;re finished
-                  </Typography>
-                  <Button variant="contained" endIcon={<ArrowForwardIcon />}>
-                  <Link href="/courses" color="inherit" underline="none">
-  Enroll now
-</Link>
-                  </Button>
-                </Paper>
-              )}
-            </Box>
-          </Container>
+        There can be hundreds of reasons but here we will give you top three
+        reasons to choose us.
         </Container>
+        
+      </p>
+      <Container>
+      <Box sx={{ maxWidth: 900 }}>
+        <Stepper activeStep={activeStep} orientation="vertical">
+          {steps.map((step, index) => (
+            <Step key={step.label}>
+              <StepLabel
+                optional={
+                  index === 2 ? (
+                    <Typography variant="caption">Last step</Typography>
+                  ) : null
+                }
+              >
+                <h2 className="subtitle m-0">{step.label}</h2>
+              </StepLabel>
+              <StepContent>
+                <p className="paragraph">{step.description}</p>
+                <Box sx={{ mb: 2 }}>
+                  <div>
+                    <Button
+                      variant="contained"
+                      onClick={handleNext}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      {index === steps.length - 1 ? "Finish" : "Continue"}
+                    </Button>
+                    <Button
+                      disabled={index === 0}
+                      onClick={handleBack}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </Box>
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+        {activeStep === steps.length && (
+          <Paper square elevation={0} sx={{ p: 3 }}>
+            <Typography>All steps completed - you&apos;re finished</Typography>
+            <Button variant="contained" endIcon={<ArrowForwardIcon />}>
+              <Link href="/courses" color="inherit" underline="none">
+                Enroll now
+              </Link>
+            </Button>
+          </Paper>
+        )}
+      </Box>
       </Container>
-    </Container>
+    </div>
   );
 };
 
 const Video = () => {
   return (
-    <Container sx={{ padding: 0, marginLeft: 0 }}>
-      <Container>
-        {" "}
-        <h2 className="home-titles"> Our Videos Set Us Apart. </h2>
-      </Container>
+    <div className="main-div">
+      {" "}
+      <h2 className="home-titles"> Our Videos Set Us Apart. </h2>
       <Container className="content">
         Contents are curated by industry experts from top-notch youtubers with a
         great experience in their respective fields.Get in-depth understanding
@@ -170,29 +164,29 @@ const Video = () => {
           </Container>
         </Grid>
       </Grid>
-    </Container>
+    </div>
   );
 };
 
 const VideoCard = () => {
   const opts = {
-    height: '300',
-    width: '100%',
+    height: "300",
+    width: "100%",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
     },
   };
-  return(
-    <Container sx={{paddingTop:12}}>
-    <Card sx={{ maxWidth: 800 }}>
-      <CardActionArea>
-      <YouTube videoId="R8sUpgRqkgI" opts={opts} />
-      </CardActionArea>
-    </Card>
+  return (
+    <Container sx={{ paddingTop: 12 }}>
+      <Card sx={{ maxWidth: 800 }}>
+        <CardActionArea>
+          <YouTube videoId="R8sUpgRqkgI" opts={opts} />
+        </CardActionArea>
+      </Card>
     </Container>
-  )
-}
+  );
+};
 
 function Home(props) {
   return (
@@ -230,6 +224,7 @@ function Home(props) {
             <Button
               variant="contained"
               className="homebutton"
+              href="/courses"
               startIcon={<ArrowForwardIcon />}
               sx={{
                 backgroundColor: "darkorchid",
@@ -241,21 +236,19 @@ function Home(props) {
             </Button>
           </Container>
         </Grid>
-        
+
         <Grid item xs={12} sm={12}>
           <HomeCard />
         </Grid>
         <Grid item xs={12} sm={12}>
-          <Courses />
+          <Courses category={"popular"} number={8} />
         </Grid>
-        
+
         <Grid item xs={12} sm={6}>
-          <Container>
           <Video />
-          </Container>
         </Grid>
         <Grid item xs={12} sm={6}>
-           <VideoCard/>
+          <VideoCard />
         </Grid>
         <Grid item xs={12} sm={6}>
           <HomeStepper />
@@ -274,7 +267,6 @@ function Home(props) {
         <Grid item xs={12} sm={12}>
           <Testimorials />
         </Grid>
-
       </Grid>
     </Box>
   );

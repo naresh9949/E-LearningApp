@@ -1,12 +1,12 @@
 import React from 'react'
 import Card from './Card'
-import './../app.css'
+import './../../app.css'
 import Chip from '@mui/material/Chip';
 import { Container } from '@mui/material'
 import Typography from '@mui/material/Typography';
 const Courses = (props)=>{
   return (
-    <Container>
+    <div className="main-div">
       <Typography gutterBottom variant="h5" component="div">
           {props.category} &nbsp;<Chip label={props.number} />
         </Typography>
@@ -20,7 +20,7 @@ const Courses = (props)=>{
       <Card url="https://image.freepik.com/free-vector/cryptographic-officer-system-administrator-create-algorithm-code-key-owner-blockchain-cryptography-encryption-algorithm-concept_335657-1835.jpg"/>
       
     </div>
-    </Container>
+    </div>
   )
 }
 

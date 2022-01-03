@@ -1,6 +1,6 @@
 import React from 'react'
 import Container from '@mui/material/Container';
-import CourseCard from './SearchCourseCard';
+import CourseCard from './courses/SearchCourseCard';
 
 const top100Films = [
     "Web Development",

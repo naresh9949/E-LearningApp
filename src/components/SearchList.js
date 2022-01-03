@@ -1,6 +1,6 @@
 import React from 'react'
 import Container from '@mui/material/Container';
-import CourseCard from './SearchCourseCard';
+import CourseCard from './/courses/SearchCourseCard';
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';

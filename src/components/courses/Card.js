@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Link from '@mui/material/Link';
-import './../app.css'
+import './../../app.css'
 export default function CourseCard(props) {
   return (
     <Card sx={{ maxWidth: 345,maxHeight:320}} className='card'>

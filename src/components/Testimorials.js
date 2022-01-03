@@ -43,7 +43,7 @@ function Testimorials() {
         { width: 1200, itemsToShow: 4 },
       ];
     return (
-        <Container>
+        <div className="main-div">
             <Container align="center">
                     <h3 className="home-titles">Happy learners from all over the world</h3>
             </Container>
@@ -56,7 +56,7 @@ function Testimorials() {
         <TesimorialCard/>
         <TesimorialCard/>
       </Carousel>
-      </Container>
+      </div>
     )
 }
 

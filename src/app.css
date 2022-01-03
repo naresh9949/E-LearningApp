@@ -12,6 +12,11 @@
     overflow-x: scroll;
     width:100%;
 }
+
+.main-div{
+    padding-left: 3%;
+    padding-right: 3%;
+}
 .card{
     flex-shrink: 0;
     width: 300px;
