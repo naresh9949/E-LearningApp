@@ -18,6 +18,8 @@ import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import Card from "@mui/material/Card";
 import { CardActionArea } from "@mui/material";
+import { useState, useEffect } from 'react';
+import {Get} from './Utilities/AxiosHandler';
 import "./../app.css";
 
 const steps = [
@@ -189,6 +191,15 @@ const VideoCard = () => {
 };
 
 function Home(props) {
+  const [reviews, setReviews] = useState([]);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(async() => {
+        const reviewsResponse = await Get("/api/review/getReviews");
+        setReviews(reviewsResponse.data);
+        const coursesResponse = await Get("/api/courses/getPopularCourses");
+        setCourses(coursesResponse.data)
+  },[]);
   return (
     <Box mt={4}>
       <Grid container spacing={4}>
@@ -241,7 +252,7 @@ function Home(props) {
           <HomeCard />
         </Grid>
         <Grid item xs={12} sm={12}>
-          <Courses category={"popular"} number={8} />
+          <Courses category={"Popular"} courses={courses}  />
         </Grid>
 
         <Grid item xs={12} sm={6}>
@@ -265,7 +276,7 @@ function Home(props) {
           </Container>
         </Grid>
         <Grid item xs={12} sm={12}>
-          <Testimorials />
+          <Testimorials reviews={reviews}/>
         </Grid>
       </Grid>
     </Box>

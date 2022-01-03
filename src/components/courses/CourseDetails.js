@@ -9,16 +9,20 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
-
-const CourseCard = ()=> {
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import { CardActionArea } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { Get } from "./../Utilities/AxiosHandler";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import Loader from './../SharedComponents/Loader';
+const CourseCard = () => {
   const primary = "red";
   const [loading, setLoading] = React.useState(false);
   function handleClick() {
@@ -34,30 +38,35 @@ const CourseCard = ()=> {
           alt="course image"
         />
         <CardContent>
-          <h3 className="dropdown-title">
-            what's included?
-          </h3>
-          <h4>67 <span className="lesson-description">Lessons</span> </h4>
-          <h4>6888 <span className="lesson-description">Enrollments</span> </h4>
-          <h4>Online <span className="lesson-description">Accessibility</span> </h4>
-          <h4>Life Time <span className="lesson-description">Validity</span> </h4>
-          <h4 style={{color:'green'}}>FREE</h4>
+          <h3 className="dropdown-title">what's included?</h3>
+          <h4>
+            67 <span className="lesson-description">Lessons</span>{" "}
+          </h4>
+          <h4>
+            6888 <span className="lesson-description">Enrollments</span>{" "}
+          </h4>
+          <h4>
+            Online <span className="lesson-description">Accessibility</span>{" "}
+          </h4>
+          <h4>
+            Life Time <span className="lesson-description">Validity</span>{" "}
+          </h4>
+          <h4 style={{ color: "green" }}>FREE</h4>
           <LoadingButton
-          sx={{backgroundColor:'blue'}}
-        onClick={handleClick}
-        fullWidth
-        loading={loading}
-        loadingIndicator="Loading..."
-        variant="contained"
-      >
-        Fetch data
-      </LoadingButton>
+            sx={{ backgroundColor: "blue" }}
+            onClick={handleClick}
+            fullWidth
+            loading={loading}
+            loadingIndicator="Loading..."
+            variant="contained"
+          >
+            Fetch data
+          </LoadingButton>
         </CardContent>
       </CardActionArea>
     </Card>
   );
-}
-
+};
 
 const CourseAccordition = () => {
   return (
@@ -116,12 +125,30 @@ const CourseAccordition = () => {
           </Stack>
         </AccordionDetails>
       </Accordion>
-     
     </div>
   );
 };
 
 function CourseDetails() {
+  const [loading,setLoading] = useState(true);
+  const { courseName } = useParams();
+  const [course, setCourse] = useState({});
+
+  const Enroll = async () => {};
+
+  useEffect(async () => {
+    const courseResponse = await Get(
+      "/api/Courses/GetCourse/611bd7508c8a8c09572c8945"
+    );
+    console.log(courseResponse.data);
+    if (courseResponse) setCourse(courseResponse.data[0]);
+    setLoading(false);
+  }, []);
+
+  if(loading)
+  return (
+    <Loader/>
+  )
   return (
     <Container>
       <Container sx={{ display: "flex", padding: 0 }}>
@@ -130,16 +157,14 @@ function CourseDetails() {
           <Link sx={{ color: "black" }} href="#" underline="none">
             Courses
           </Link>{" "}
-          / <span>Introduction to MachineLearning</span>
+          / <span>{course.name}</span>
         </p>
       </Container>
       <Container sx={{ padding: 0 }}>
         <Grid container spacing={6}>
           <Grid item xs={12} sm={8}>
             <p>COURSE</p>
-            <h2 className="courceTitle">
-              Introduction to MachineLearning using Python
-            </h2>
+            <h2 className="courceTitle">{course.name}</h2>
 
             <p className="courceDescription">
               Python can be used on a server to create web applications. Python
@@ -149,6 +174,25 @@ function CourseDetails() {
               mathematics. Python can be used for rapid prototyping, or for
               production-ready software development.
             </p>
+
+            {
+              course.cos.map(co=>(
+                <Alert
+                sx={{
+                  backgroundColor: "inherit",
+                  padding: 0,
+                  margin: 0,
+                  color: "black",
+                }}
+                iconMapping={{
+                  success: <CheckCircleOutlineIcon fontSize="inherit" />,
+                }}
+              >
+                {co}
+              </Alert>
+              ))
+            }
+           
             <h4 className="subtitle">Syllabus</h4>
             <CourseAccordition />
             <h4 className="subtitle">Author</h4>
@@ -161,13 +205,13 @@ function CourseDetails() {
               <h3>
                 &nbsp;&nbsp;
                 <Link href="#" underline="none">
-                  LearnCodeOnline
+                  {course.channelName}
                 </Link>
               </h3>
             </div>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <CourseCard/>
+            <CourseCard course={course} />
           </Grid>
         </Grid>
       </Container>

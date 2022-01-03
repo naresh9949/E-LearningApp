@@ -122,8 +122,8 @@ function App() {
           <Route path="/my-enrollments" element={<MyEnrollments/>} />
           <Route path="/user/account" element={<MyAccout/>} />
           <Route path="/courseplayer" element={<CoursePlayer />} />
-          <Route path="/course" element={<CourseDetails />} />
-          <Route path="/admin/uploadcourse" element={<UploadScreen />} />
+          <Route path="/course/:courseName" element={<CourseDetails />} />
+          <Route path="/admin/upload-course" element={<UploadScreen />} />
           <Route path="/quizzes" element={<Courses />} />
           <Route path="/quiz/take-quiz" element={<TakeQuiz />} />
           <Route path="/quiz/create-quiz" element={<CreateQuiz />} />
