@@ -4,9 +4,9 @@ import './../../app.css'
 import Chip from '@mui/material/Chip';
 import { Container } from '@mui/material'
 import Typography from '@mui/material/Typography';
-const Courses = (props)=>{
+const CourseRow = (props)=>{
   return (
-    <div className="main-div">
+    <div>
       <Typography gutterBottom variant="h5" component="div">
           {props.category} &nbsp;<Chip label={props.number} />
         </Typography>
@@ -18,10 +18,9 @@ const Courses = (props)=>{
       <Card url="https://image.freepik.com/free-vector/cryptographic-officer-system-administrator-create-algorithm-code-key-owner-blockchain-cryptography-encryption-algorithm-concept_335657-1835.jpg"/>
       <Card url="https://image.freepik.com/free-vector/cryptographic-officer-system-administrator-create-algorithm-code-key-owner-blockchain-cryptography-encryption-algorithm-concept_335657-1835.jpg"/>
       <Card url="https://image.freepik.com/free-vector/cryptographic-officer-system-administrator-create-algorithm-code-key-owner-blockchain-cryptography-encryption-algorithm-concept_335657-1835.jpg"/>
-      
     </div>
     </div>
   )
 }
 
-export default Courses;
+export default CourseRow;

@@ -1,9 +1,8 @@
 import React from 'react'
 import { Container } from "@mui/material";
-import CourseRow from './CoursesRow';
+import CourseRow from './../courses/CoursesRow';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import './../../app.css';
 
 const Chips = ()=> {
   const handleClick = () => {
@@ -11,7 +10,7 @@ const Chips = ()=> {
   };
 
   return (
-    <div className="category-chips">
+    <Container className="category-chips" sx={{padding:2}}>
     <p className="categories">categories</p>
     <Stack direction="row" spacing={1} sx={{overflow:'scroll'}}>
       <Chip className="chip" label="MOBILE APPLICATION DEVELOPMENT" onClick={handleClick} />
@@ -23,23 +22,23 @@ const Chips = ()=> {
       <Chip className="chip" label="DEVOPS" onClick={handleClick} />
       <Chip className="chip" label="CLOUD COMPUTING" onClick={handleClick} />
     </Stack>
-    </div>
+    </Container>
   );
 }
 
 
 
-function Courses() {
+function Quizzes() {
     return (
-        <div className="main-div">
+        <Container sx={{paddingTop:2}}>
             <Chips/>
             <CourseRow category="Popular Courses" number={14}/>
             <CourseRow category="Web Development" number={22}/>
             <CourseRow category="Mobile Application Development" number={3}/>
             <CourseRow category="CS Fundamentals" number={15}/>
             <CourseRow category="Web Development" number={23}/>
-        </div>
+        </Container>
     )
 }
 
-export default Courses
+export default Quizzes

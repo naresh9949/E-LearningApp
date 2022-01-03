@@ -16,8 +16,9 @@ import MyEnrollments from './components/MyEnrollments';
 import ContactUs from './components/Contactus';
 import UploadScreen from './components/UploadScreen';
 import CourseDetails from './components/courses/CourseDetails';
-import Quiz from './components/Quiz/Quiz';
+import TakeQuiz from './components/Quiz/TakeQuiz';
 import CreateQuiz from './components/Quiz/CreateQuiz';
+import Quizzes from './components/Quiz/Quizzes';
 import ForgotPassword from './components/Auth/ForgotPassword';
 
 const getUrl = () => {
@@ -123,8 +124,9 @@ function App() {
           <Route path="/courseplayer" element={<CoursePlayer />} />
           <Route path="/course" element={<CourseDetails />} />
           <Route path="/admin/uploadcourse" element={<UploadScreen />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/CreateQuiz" element={<CreateQuiz />} />
+          <Route path="/quizzes" element={<Courses />} />
+          <Route path="/quiz/take-quiz" element={<TakeQuiz />} />
+          <Route path="/quiz/create-quiz" element={<CreateQuiz />} />
           
         </Routes>
       </BrowserRouter>
