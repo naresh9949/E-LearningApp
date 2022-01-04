@@ -137,11 +137,9 @@ function CourseDetails() {
   const Enroll = async () => {};
 
   useEffect(async () => {
-    const courseResponse = await Get(
-      "/api/Courses/GetCourse/611bd7508c8a8c09572c8945"
-    );
+    const courseResponse = await Get("/api/Courses/GetCourseByName/"+courseName);
     console.log(courseResponse.data);
-    if (courseResponse) setCourse(courseResponse.data[0]);
+    if (courseResponse) setCourse(courseResponse.data);
     setLoading(false);
   }, []);
 
