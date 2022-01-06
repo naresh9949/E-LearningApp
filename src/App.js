@@ -25,6 +25,7 @@ const getUrl = () => {
   console.log(window.location.pathname)
   return window.location.pathname;
 }
+
 const SayHello = () => {
   const user = true;
   const url = getUrl();
