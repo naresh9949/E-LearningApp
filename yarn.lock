@@ -9954,6 +9954,13 @@ react-horizontal-scroll-container@^1.0.1:
   resolved "https://registry.yarnpkg.com/react-horizontal-scroll-container/-/react-horizontal-scroll-container-1.0.1.tgz#3601fae79e2f6f9c39f3e2ef6cfdee3d4ba6a953"
   integrity sha512-OLwy3ezXOwJbuWfG3mPbMWkwrhahbEKWSIMulw50xRzt04aL2o5ITTDlYH0roVjRP4ogmagRYmFFdPK9QKK8aQ==
 
+react-https-redirect@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-https-redirect/-/react-https-redirect-1.1.0.tgz#6f3c35cc5849d863d398714fcb9f4d125f9e254d"
+  integrity sha512-HWN/Ftgi31W2OAFVNo5BO1n8C9D2W0L+sque20dKuwh51hQuMwK4bMAtdrYAmapfGGh+53zQ1NsrSacVS1Q/mw==
+  dependencies:
+    prop-types "^15.5.8"
+
 react-indiana-drag-scroll@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-indiana-drag-scroll/-/react-indiana-drag-scroll-2.1.0.tgz#37654eae8caced01cdecc8bce55f0382871a021d"

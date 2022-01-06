@@ -24,6 +24,7 @@
     "react-dom": "^17.0.2",
     "react-elastic-carousel": "^0.11.5",
     "react-horizontal-scroll-container": "^1.0.1",
+    "react-https-redirect": "^1.1.0",
     "react-indiana-drag-scroll": "^2.1.0",
     "react-router-dom": "6",
     "react-scripts": "4.0.3",
