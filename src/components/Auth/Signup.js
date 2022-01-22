@@ -1,7 +1,7 @@
-import React from "react";
+import React,{useState} from "react";
 import { Container } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import logo from "./../images/logo.png";
+import logo from "./../../images/logo.png";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -18,30 +18,44 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import Spinner from './../SharedComponents/Spinner';
+import {Post,Get} from './../Utilities/AxiosHandler';
+
+
 function Login() {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorText, setEmailErrorText] = React.useState("");
-  const [values, setValues] = React.useState({
-    amount: "",
-    password: "",
-    weight: "",
-    weightRange: "",
-    showPassword: false,
-  });
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
+  const [loading,setLoading] = useState(false);
+  const [showpass,setShowpass] = useState(false);
+  const [password,setPassword] = useState('');
+  const [email,setEmail] = useState('');
+  
+ 
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const handleLogin = async() => {
+    setLoading(true)
+    const obj = {
+      email:email,
+      password:password
+    }
+    const res = await Post('/api/auth/signup',obj);
+    console.log(res)
+    if(res && res.status===201)
+      window.location = '/user/enroll?email='+email;
+    else if(res && res.status===200){
+      setEmailError(true);
+      setEmailErrorText(res.data.message)
+    }
+  }
+
+  // if(loading)
+  // return <Spinner/>
+
+
   return (
     <Container align="center">
       <Avatar alt="Remy Sharp" src={logo} sx={{ width: 130, height: 130 }} />
@@ -56,11 +70,12 @@ function Login() {
       </p>
       <TextField
         autoFocus
-        error={false}
+        error={emailError}
         className="log-input"
         id="outlined-error-helper-text"
         label="Email"
         defaultValue="example@gmail.com"
+        onChange={(event)=>{setEmail(event.target.value)}}
         helperText={emailErrorText}
       />
       <br />
@@ -71,18 +86,18 @@ function Login() {
           label="Password"
           className="log-input"
           id="outlined-adornment-password"
-          type={values.showPassword ? "text" : "password"}
-          value={values.password}
-          onChange={handleChange("password")}
+          type={showpass ? "text" : "password"}
+          value={password}
+          onChange={(event)=>{setPassword(event.target.value)}}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
+                onClick={(event)=>{setShowpass(!showpass)}}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
               >
-                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                {showpass ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           }
@@ -90,7 +105,7 @@ function Login() {
       </FormControl>
       <br/>
       <br/>
-      <Button className="login-button" variant="contained">
+      <Button onClick={handleLogin} className="login-button" variant="contained">
         Sign Up
       </Button>
       <p className="qustion"> 

@@ -1,7 +1,7 @@
-import React from "react";
+import React,{useState} from "react";
 import { Container } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import logo from "./../images/logo.png";
+import logo from "./../../images/logo.png";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -18,9 +18,11 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import Spinner from './../SharedComponents/Spinner';
 function Login() {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorText, setEmailErrorText] = React.useState("");
+  const [loading,setLoading] = useState(false);
   const [values, setValues] = React.useState({
     amount: "",
     password: "",
@@ -42,6 +44,11 @@ function Login() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+
+  if(loading)
+  return <Spinner/>
+  
   return (
     <Container align="center">
       <Avatar alt="Remy Sharp" src={logo} sx={{ width: 130, height: 130 }} />

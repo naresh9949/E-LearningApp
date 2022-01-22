@@ -10,8 +10,8 @@ import Courses from './components/courses/Courses';
 import SearchList from './components/SearchList';
 import Footer from "./components/Footer";
 import MyAccout from './components/MyAccout'
-import Login from './components/Signin';
-import Signup from './components/Signup'
+import Login from './components/Auth/Signin';
+import Signup from './components/Auth/Signup'
 import MyEnrollments from './components/MyEnrollments';
 import ContactUs from './components/Contactus';
 import UploadScreen from './components/UploadScreen';
@@ -20,6 +20,9 @@ import TakeQuiz from './components/Quiz/TakeQuiz';
 import CreateQuiz from './components/Quiz/CreateQuiz';
 import Quizzes from './components/Quiz/Quizzes';
 import ForgotPassword from './components/Auth/ForgotPassword';
+import EnrollUser from './components/Auth/UserDetails';
+import VerifyUser from './components/Auth/VerifyUser';
+
 
 const getUrl = () => {
   console.log(window.location.pathname)
@@ -104,7 +107,7 @@ if(url === "/contactus")
 function App() {
   var login = true;
   const url = getUrl();
-  if(url==="/signup" || url==="/signin" || url==='/ForgotPassword')
+  if(url==="/signup" || url==="/signin" || url==='/ForgotPassword' || url==='/user/enroll' || url.includes('/user/verify/'))
   login = false;
 
   return (
@@ -128,6 +131,8 @@ function App() {
           <Route path="/quizzes" element={<Courses />} />
           <Route path="/quiz/take-quiz" element={<TakeQuiz />} />
           <Route path="/quiz/create-quiz" element={<CreateQuiz />} />
+          <Route path="/user/enroll" element={<EnrollUser />} />
+          <Route path="/user/verify/:id" element={<VerifyUser />} /> 
           
         </Routes>
       </BrowserRouter>
