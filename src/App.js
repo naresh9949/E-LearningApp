@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import Home from "./components/Home";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -22,47 +22,30 @@ import Quizzes from './components/Quiz/Quizzes';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import EnrollUser from './components/Auth/UserDetails';
 import VerifyUser from './components/Auth/VerifyUser';
-
+import Cookies from 'universal-cookie';
+import {setUser,getUser} from './components/Utilities/UserHandler';
+import {Get} from './components/Utilities/AxiosHandler';
+import Spinner from './components/SharedComponents/Spinner';
 
 const getUrl = () => {
-  console.log(window.location.pathname)
   return window.location.pathname;
 }
 
 const SayHello = () => {
-  const user = true;
+  const user = getUser();
   const url = getUrl();
+
+  const urls = ['/','/courseplayer','/course'];
+  if(urls.includes(url) || url.includes('/courseplayer'))
+  return(
+    <React.Fragment>
+
+    </React.Fragment>
+  );
+
   
 
-  if(url=="/")
-  return(
-    <React.Fragment>
 
-    </React.Fragment>
-  );
-
-  if(url=="/courseplayer")
-  return(
-    <React.Fragment>
-
-    </React.Fragment>
-  );
-
-  if(url=="/course")
-  return(
-    <React.Fragment>
-
-    </React.Fragment>
-  );
-
-
-
-  if(url=="/admin/uploadcourse")
-  return(
-    <React.Fragment>
-
-    </React.Fragment>
-  );
 
   if(url === "/my-enrollments")
   return(
@@ -86,7 +69,7 @@ if(url === "/contactus")
   return(
       <div className="sayhello">
          <Container>
-           <p className="say-name">Hi Naresh Kollipora</p>
+           <p className="say-name">Hi, {user.first_name+" "+user.last_name}</p>
            <p className="say-name">Welcome to QuickLearner</p>
          </Container>
       </div>
@@ -105,10 +88,32 @@ if(url === "/contactus")
 
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  const cookies = new Cookies();
+  const authroutes = ['/signup','/signin']
+  const userroutes = ['/my-enrollments','/user/account']
   var login = true;
   const url = getUrl();
   if(url==="/signup" || url==="/signin" || url==='/ForgotPassword' || url==='/user/enroll' || url.includes('/user/verify/'))
   login = false;
+
+  
+  if(cookies.get('authToken') && authroutes.indexOf(url) > -1)
+    window.location = '/'
+
+  if(!cookies.get('authToken') && (userroutes.indexOf(url) > -1 || url.includes('/courseplayer')))
+   window.location = '/signin';
+
+  useEffect(async () => {
+      if(!cookies.get('user')){
+      const res = await Get('/api/user/getUserInfo');
+      }
+      setLoading(false);
+  },[])
+
+  if(loading)
+  return <Spinner/>
 
   return (
     <div className="App">
@@ -125,10 +130,10 @@ function App() {
           <Route path="/ForgotPassword" element={<ForgotPassword/>} />
           <Route path="/my-enrollments" element={<MyEnrollments/>} />
           <Route path="/user/account" element={<MyAccout/>} />
-          <Route path="/courseplayer" element={<CoursePlayer />} />
+          <Route path="/courseplayer/:courseName" element={<CoursePlayer />} />
           <Route path="/course/:courseName" element={<CourseDetails />} />
           <Route path="/admin/upload-course" element={<UploadScreen />} />
-          <Route path="/quizzes" element={<Courses />} />
+          <Route path="/tests" element={<Courses />} />
           <Route path="/quiz/take-quiz" element={<TakeQuiz />} />
           <Route path="/quiz/create-quiz" element={<CreateQuiz />} />
           <Route path="/user/enroll" element={<EnrollUser />} />

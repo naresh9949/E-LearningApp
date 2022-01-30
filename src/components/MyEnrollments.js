@@ -1,29 +1,46 @@
-import React from 'react'
-import Container from '@mui/material/Container';
-import CourseCard from './courses/SearchCourseCard';
-
-const top100Films = [
-    "Web Development",
-    "Mobile App Development",
-    "testing"
-  ];
-
+import React, { useState, useEffect } from "react";
+import Container from "@mui/material/Container";
+import CourseCard from "./courses/SearchCourseCard";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import Spinner from "./SharedComponents/Spinner";
+import { Get } from "./Utilities/AxiosHandler";
 
 function SearchList() {
-    const search = "web development";
-    const results = 5;
-    return (
-        <Container>
-            <br/>
-            <CourseCard title="Introduction to Flutter" image="https://miro.medium.com/max/560/1*y9qRStXm3LEkQP7krJYjEA.png" youtubeName="LearnCodeOnline" youtubeLink="" lesson={24} progress={34} description="React is a library for building composable user interfaces. It encourages the creation of reusable UI components, which present data that changes over time"/>
-            <CourseCard title="Introduction to Flutter" image="https://i.ytimg.com/vi/nvHeB32ICDM/maxresdefault.jpg" youtubeName="LearnCodeOnline" youtubeLink="" lesson={56} progress={34} description="React is a library for building composable user interfaces. It encourages the creation of reusable UI components, which present data that changes over time"/>
-            <CourseCard title="Introduction to Flutter" image="https://i.ytimg.com/vi/nvHeB32ICDM/maxresdefault.jpg" youtubeName="LearnCodeOnline" youtubeLink="" lesson={43} progress={34} description="React is a library for building composable user interfaces. It encourages the creation of reusable UI components, which present data that changes over time"/>
-            <CourseCard title="Introduction to Django" image="https://assets.website-files.com/5b6901669b93d7837e36dc4c/615e1104ffbf5ae592265cc7_python-django.png" youtubeName="LearnCodeOnline" youtubeLink="" lesson={33} progress={34} description="React is a library for building composable user interfaces. It encourages the creation of reusable UI components, which present data that changes over time"/>
-            <CourseCard title="Introduction to Flutter" image="https://rbots.in/wp-content/uploads/2018/09/python-logo.png" youtubeName="LearnCodeOnline" youtubeLink="" lesson={12} progress={34} description="React is a library for building composable user interfaces. It encourages the creation of reusable UI components, which present data that changes over time"/>
-            <CourseCard title="Introduction to Flutter" image="https://i.ytimg.com/vi/nvHeB32ICDM/maxresdefault.jpg" youtubeName="LearnCodeOnline" youtubeLink="" lesson={10} progress={34} description="React is a library for building composable user interfaces. It encourages the creation of reusable UI components, which present data that changes over time"/>
-            <br/>
-        </Container>
-    )
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(async () => {
+    const res = await Get("/api/user/myEnrollments");
+    if (res && res.status === 200) setCourses(res.data);
+    setLoading(false);
+  }, []);
+
+  if (loading) return <Spinner />;
+  return (
+    <Container>
+      <br />
+      <Typography className="subtitle" variant="h5" gutterBottom>
+        <span>Enrollments</span> <Chip label={courses.length} />
+      </Typography>
+      <br />
+
+      {courses.map((course) => (
+        <CourseCard
+          title={course.name}
+          image={course.image}
+          path={"/courseplayer/"+course.name}
+          youtubeName={course.channelName}
+          lesson={24}
+          progress={34}
+        />
+        
+      ))}
+
+     
+      <br />
+    </Container>
+  );
 }
 
-export default SearchList
+export default SearchList;

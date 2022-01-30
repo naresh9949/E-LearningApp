@@ -1,4 +1,5 @@
 import * as React from "react";
+import {useState} from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -7,13 +8,15 @@ import { Container } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import InputBase from "@mui/material/InputBase";
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import Badge from "@mui/material/Badge";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import QuizIcon from "@mui/icons-material/Quiz";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
@@ -25,6 +28,9 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import { getUser, logOut } from "./Utilities/UserHandler";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -70,12 +76,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const user = getUser();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <React.Fragment>
       <Box
@@ -89,7 +98,7 @@ function AccountMenu() {
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2 }}
+            sx={{ ml: 0 }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
@@ -133,16 +142,190 @@ function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
+        {user && (
+          <MenuItem>
+            <Container align="center">
+              <Avatar
+                sx={{ width: 36, height: 36 }}
+                alt={user.first_name + " " + user.last_name}
+                src={user.image}
+              />
+              {user.first_name + " " + user.last_name}
+              <br />
+              {user.email}
+            </Container>
+          </MenuItem>
+        )}
+
+        {user && <Divider />}
+        {user && (
+          <MenuItem>
+            <ListItemIcon>
+              <VideoLibraryIcon fontSize="small" />
+            </ListItemIcon>
+            <Link href="/my-enrollments" color="inherit" underline="none">
+              My Enrollments
+            </Link>
+          </MenuItem>
+        )}
+        {user && (
+            <MenuItem>
+              <ListItemIcon>
+                <QuizIcon fontSize="small" />
+              </ListItemIcon>
+              <Link href="/my-tests" color="inherit" underline="none">
+                My Tests
+              </Link>
+            </MenuItem>
+          ) }{user && <Divider />}
+        {/** Standard options */}
+        <MenuItem>
+          <ListItemIcon>
+            <OndemandVideoIcon fontSize="small" />
+          </ListItemIcon>
+          <Link href="/courses" color="inherit" underline="none">
+            Courses
+          </Link>
+        </MenuItem>
+
+        <MenuItem>
+          <ListItemIcon>
+            <QuizIcon fontSize="small" />
+          </ListItemIcon>
+          <Link href="/tests" color="inherit" underline="none">
+            Tests
+          </Link>
+        </MenuItem>
+
+        <MenuItem>
+          <ListItemIcon>
+            <ContactPageIcon fontSize="small" />
+          </ListItemIcon>
+          <Link href="/contactus" color="inherit" underline="none">
+            Contact us
+          </Link>
+        </MenuItem>
+
+        <Divider />
+        {user && (
+            <MenuItem>
+              <ListItemIcon>
+                <ManageAccountsIcon fontSize="small" />
+              </ListItemIcon>
+              <Link href="/user/account" color="inherit" underline="none">
+                Account
+              </Link>
+            </MenuItem>
+          )}{user && (
+            <MenuItem
+              onClick={() => {
+                logOut();
+              }}
+            >
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          )}
+
+        {!user && (
+          <MenuItem>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            <Link href="/signin" color="inherit" underline="none">
+              Signin
+            </Link>
+          </MenuItem>
+        )}
+      </Menu>
+    </React.Fragment>
+  );
+}
+
+function DesktopUserMenu() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const user = getUser();
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <React.Fragment>
+      <Box
+        sx={{
+          display: { xs: "none", md: "flex" },
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 0 }}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <Avatar
+              sx={{ width: 36, height: 36 }}
+              alt={user.first_name + " " + user.last_name}
+              src={user.image}
+            />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
         <MenuItem>
           <Container align="center">
             <Avatar
-              sx={{ width: 56, height: 56 }}
-              alt="pic"
-              src="https://upload.wikimedia.org/wikipedia/commons/6/69/Rohit_Sharma_2015_%28cropped%29.jpg"
+              sx={{ width: 36, height: 36 }}
+              alt={user.first_name + " " + user.last_name}
+              src={user.image}
             />
-            Naresh Kollipora
+            {user.first_name + " " + user.last_name}
             <br />
-            nareshkollipora@gmail.com
+            {user.email}
           </Container>
         </MenuItem>
         <Divider />
@@ -150,32 +333,32 @@ function AccountMenu() {
           <ListItemIcon>
             <VideoLibraryIcon fontSize="small" />
           </ListItemIcon>
-          <Link href="/courses" color="inherit" underline="none">
-            All Cources
+          <Link href="/my-enrollments" color="inherit" underline="none">
+            My Enrollments
           </Link>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <ManageAccountsIcon fontSize="small" />
+            <QuizIcon fontSize="small" />
           </ListItemIcon>
-          <Link href="/my-enrollments" color="inherit" underline="none">
-            My Enrollments
+          <Link href="/my-tests" color="inherit" underline="none">
+            My Tests
           </Link>
         </MenuItem>
         <Divider />
         <MenuItem>
           <ListItemIcon>
-            <PersonAdd fontSize="small" />
+            <ManageAccountsIcon fontSize="small" />
           </ListItemIcon>
-          Add another account
+          <Link href="/user/account" color="inherit" underline="none">
+            Account
+          </Link>
         </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            logOut();
+          }}
+        >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
@@ -187,6 +370,13 @@ function AccountMenu() {
 }
 
 export default function PrimarySearchAppBar() {
+  const [search,setSearch] = useState('');
+  const user = getUser();
+  const handleKeyDown = (event) => {
+    if(event.key==='Enter')
+      window.location = '/search?search_query='+search;
+  }
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -201,19 +391,10 @@ export default function PrimarySearchAppBar() {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            RJ Academy
+            QuickLearner.io
           </Typography>
 
-          {/* <CardMedia
-            sx={{
-              display: { xs: "none", sm: "block" },
-              height: 60,
-              width: 200,
-            }}
-            component="img"
-            image="https://d26a57ydsghvgx.cloudfront.net/product/Customer%20Story%20Images/New%20Udemy.png"
-            alt="green iguana"
-          /> */}
+          
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -221,6 +402,9 @@ export default function PrimarySearchAppBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onChange={(event)=>{setSearch(event.target.value)}}
+              value={search}
+              onKeyDown = {handleKeyDown}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
@@ -263,15 +447,17 @@ export default function PrimarySearchAppBar() {
               <Avatar sx={{ bgcolor: 'black' }}>NK</Avatar>
             </IconButton>
           </Box> */}
-
-          <Link
-            sx={{ display: { xs: "none", md: "flex" } }}
-            href="/signin"
-            underline="none"
-            className="nav-signs"
-          >
-            SIGN IN
-          </Link>
+          {user && <DesktopUserMenu />}
+          {!user && (
+            <Link
+              sx={{ display: { xs: "none", md: "flex" } }}
+              href="/signin"
+              underline="none"
+              className="nav-signs"
+            >
+              SIGN IN
+            </Link>
+          )}
 
           <AccountMenu />
         </Toolbar>

@@ -5,9 +5,12 @@ import Chip from '@mui/material/Chip';
 import { Container } from '@mui/material'
 import Typography from '@mui/material/Typography';
 const CourseRow = (props)=>{
-  console.log(props.courses)
+
+  if(props.courses.length===0)
+    return <React.Fragment></React.Fragment>
+    
   return (
-    <div>
+    <>
       <Typography gutterBottom variant="h5" component="div">
           {props.category} &nbsp;<Chip label={props.courses.length} />
         </Typography>
@@ -17,7 +20,7 @@ const CourseRow = (props)=>{
       ))}
        
     </div>
-    </div>
+    </>
   )
 }
 

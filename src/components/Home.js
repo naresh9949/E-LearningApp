@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import Courses from "./courses/CoursesRow";
+import CoursesRow from "./courses/CoursesRow";
 import { Container } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeCard from "./HomeCard";
@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import Card from "@mui/material/Card";
+import Spinner from "./SharedComponents/Spinner";
 import { CardActionArea } from "@mui/material";
 import { useState, useEffect } from 'react';
 import {Get} from './Utilities/AxiosHandler';
@@ -54,8 +55,10 @@ const HomeStepper = () => {
   };
 
   return (
-    <div className="main-div">
+    <Container>
+      <Container>
       <h3 className="home-titles">Why Choose Us?</h3>
+      </Container>
       <p className="paragraph">
         <Container>
         There can be hundreds of reasons but here we will give you top three
@@ -113,15 +116,16 @@ const HomeStepper = () => {
         )}
       </Box>
       </Container>
-    </div>
+    </Container>
   );
 };
 
 const Video = () => {
   return (
-    <div className="main-div">
-      {" "}
+    <Container>
+      <Container>
       <h2 className="home-titles"> Our Videos Set Us Apart. </h2>
+      </Container>
       <Container className="content">
         Contents are curated by industry experts from top-notch youtubers with a
         great experience in their respective fields.Get in-depth understanding
@@ -166,7 +170,7 @@ const Video = () => {
           </Container>
         </Grid>
       </Grid>
-    </div>
+    </Container>
   );
 };
 
@@ -193,16 +197,21 @@ const VideoCard = () => {
 function Home(props) {
   const [reviews, setReviews] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(async() => {
         const reviewsResponse = await Get("/api/review/getReviews");
         setReviews(reviewsResponse.data);
         const coursesResponse = await Get("/api/courses/getPopularCourses");
         setCourses(coursesResponse.data)
+        setLoading(false);
   },[]);
+
+  if(loading)
+    return <Spinner/>
   return (
     <Box mt={4}>
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <CardMedia
             container
@@ -252,11 +261,13 @@ function Home(props) {
           <HomeCard />
         </Grid>
         <Grid item xs={12} sm={12}>
-          <Courses category={"Popular"} courses={courses}  />
+          <Container>
+          <CoursesRow category={"Popular"} courses={courses}  />
+          </Container>
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <Video />
+          <Video/>
         </Grid>
         <Grid item xs={12} sm={6}>
           <VideoCard />

@@ -21,8 +21,8 @@ const [lastName, setLastName] = useState("");
 const [branch, setBranch] = useState("");
 const [institute, setInstitute] = useState("");
 const [number, setNumber] = useState("");
-const [branches, setBranches] = useState(["CSE", "ECE"]);
-const [institutes, setInstitutes] = useState([34,44,4,4]);
+const [branches, setBranches] = useState([]);
+const [institutes, setInstitutes] = useState([]);
 const [inputValue, setInputValue] = React.useState('');
 
   const handleSave = async() => {
@@ -36,7 +36,8 @@ const [inputValue, setInputValue] = React.useState('');
       }
 
         const res = await Post('/api/user/updateuser',object);
-      if(res && res.status === 201)
+        console.log(res)
+        if(res && res.status === 201)
           window.location = '/';
         
   }
@@ -44,11 +45,11 @@ const [inputValue, setInputValue] = React.useState('');
   useEffect(async ()=>{
     
 
-    const res1 = await Get('/dashboard/api/home/getBranches');
+    const res1 = await Get('/api/home/getBranches');
     if(res1 && res1.status===200)
         setBranches(res1.data)
 
-    const res2 = await Get('/dashboard/api/home/getInstitutions');
+    const res2 = await Get('/api/home/getInstitutions');
     if(res2 && res2.status===200)
         setInstitutes(res2.data)
 

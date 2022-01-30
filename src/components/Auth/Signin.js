@@ -19,30 +19,79 @@ import Button from "@mui/material/Button";
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Spinner from './../SharedComponents/Spinner';
+import {Post} from './../Utilities/AxiosHandler';
+import { GoogleLogin } from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+
 function Login() {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorText, setEmailErrorText] = React.useState("");
   const [loading,setLoading] = useState(false);
-  const [values, setValues] = React.useState({
-    amount: "",
-    password: "",
-    weight: "",
-    weightRange: "",
-    showPassword: false,
-  });
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
+  const [showpass,setShowpass] = useState(false);
+  const [password,setPassword] = useState('');
+  const [email,setEmail] = useState('');
+  
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleLogin = async() => {
+    setLoading(true)
+    const obj = {
+      email:email,
+      password:password
+    }
+    const res = await Post('/api/auth/signin',obj);
+    console.log(res)
+    if(res && res.status===200)
+      window.location = '/';
+    else if(res && res.status===201){
+      setLoading(false)
+      setEmailError(true);
+      setEmailErrorText(res.data.message)
+    }
+  }
+
+  const handleGoogleLogin = async (googleData) => {
+    setLoading(true)
+    const res = await Post("/api/auth/google", { token: googleData.tokenId });
+    if(res){
+      console.log(res);
+      if(res.status===201)
+        window.location = '/user/enroll?email='+res.data.email;
+
+      if(res.status === 200)
+        window.location = '/';
+    }
+    // store returned user somehow
+  };
+
+  const responseFacebook = async(response) => {
+    setLoading(true)
+    if(response && response.accessToken){
+     
+      const obj ={
+        token:response.accessToken,
+        email:response.email,
+        picture : response.picture.data.url,
+        id:response.id
+      }
+    const res = await Post('/api/auth/fb',obj);
+    if(res)
+    {
+      console.log(response)
+      if(res.status===201)
+       window.location = '/user/enroll?email='+response.email;
+
+      if(res.status === 200)
+      window.location = '/';
+    }
+    }
+  };
+
+  const responseGoogle = (response) => {
+    console.log(response);
   };
 
 
@@ -63,11 +112,12 @@ function Login() {
       </p>
       <TextField
         autoFocus
-        error={false}
+        error={emailError}
         className="log-input"
         id="outlined-error-helper-text"
         label="Email"
-        defaultValue="example@gmail.com"
+        placeholder="example@gmail.com"
+        onChange={(event)=>{setEmail(event.target.value)}}
         helperText={emailErrorText}
       />
       <br />
@@ -78,18 +128,18 @@ function Login() {
           label="Password"
           className="log-input"
           id="outlined-adornment-password"
-          type={values.showPassword ? "text" : "password"}
-          value={values.password}
-          onChange={handleChange("password")}
+          type={showpass ? "text" : "password"}
+          value={password}
+          onChange={(event)=>{setPassword(event.target.value)}}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
+                onClick={(event)=>{setShowpass(!showpass)}}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
               >
-                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                {showpass ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           }
@@ -97,22 +147,52 @@ function Login() {
       </FormControl>
       <br/>
       <br/>
-      <Button className="login-button" variant="contained">
-        Sign In
+      <Button onClick={handleLogin} className="login-button" variant="contained">
+        Sign in
       </Button>
       <p className="qustion">
       <Link href="/signup" color="inherit" underline="none">
         Forgot Password?
         </Link>
       </p>
-      <Button className="social-log" variant="contained" startIcon={<GoogleIcon />}>
-  Signin with google
-</Button>
-<br/>
-<br/>
-<Button className="social-log" variant="contained" startIcon={<FacebookIcon />}>
-  Signin with facebook
-</Button>
+      <GoogleLogin
+        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+        buttonText="Signin with Google"
+        render={(renderProps) => (
+          <Button
+            onClick={renderProps.onClick}
+            className="social-log"
+            variant="contained"
+            startIcon={<GoogleIcon />}
+            disabled={renderProps.disabled}
+          >
+            Signin with Google
+          </Button>
+        )}
+        sx={{ width: "100% !important" }}
+        onSuccess={handleGoogleLogin}
+        onFailure={responseGoogle}
+      />
+
+      <br />
+      <br />
+      <FacebookLogin
+        appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+        autoLoad={true}
+        fields="name,email,picture"
+        onClick={() => {console.log("PPPPP")}}
+        render={(renderProps) => (
+          <Button
+            onClick={renderProps.onClick}
+            className="social-log"
+            variant="contained"
+            startIcon={<FacebookIcon />}
+          >
+            Signin with facebook
+          </Button>
+        )}
+        callback={responseFacebook}
+      />
     </Container>
   );
 }

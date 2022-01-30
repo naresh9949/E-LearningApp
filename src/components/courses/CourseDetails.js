@@ -18,32 +18,44 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Get } from "./../Utilities/AxiosHandler";
+import { Get,Post } from "./../Utilities/AxiosHandler";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Loader from './../SharedComponents/Loader';
-const CourseCard = () => {
+import Loader from "./../SharedComponents/Spinner";
+
+const CourseCard = (props) => {
   const primary = "red";
   const [loading, setLoading] = React.useState(false);
-  function handleClick() {
+
+
+  const handleClick = async()=>{
     setLoading(true);
+    console.log("clicked");
+    const res = await Post('/api/user/enroll',{courseId:props.course._id});
+    console.log(res)
+    if(res && res.status===200)
+      window.location = '/courseplayer/'+props.course.name;
   }
+
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ minWidth: 345 }}>
       <CardActionArea>
         <CardMedia
           component="img"
           width="350"
-          image="https://d29xdxvhssor07.cloudfront.net/assets/schools/2410/courses/53635/reactimage_fq7uz.png"
-          alt="course image"
+          image={props.course.image}
+          alt={props.course.name}
         />
         <CardContent>
           <h3 className="dropdown-title">what's included?</h3>
           <h4>
-            67 <span className="lesson-description">Lessons</span>{" "}
+            {props.course.classes}{" "}
+            <span className="lesson-description">Lessons</span>{" "}
           </h4>
           <h4>
-            6888 <span className="lesson-description">Enrollments</span>{" "}
+            {props.course.noenrolls + 3452}{" "}
+            <span className="lesson-description">Enrollments</span>{" "}
           </h4>
           <h4>
             Online <span className="lesson-description">Accessibility</span>{" "}
@@ -53,14 +65,13 @@ const CourseCard = () => {
           </h4>
           <h4 style={{ color: "green" }}>FREE</h4>
           <LoadingButton
-            sx={{ backgroundColor: "blue" }}
             onClick={handleClick}
             fullWidth
             loading={loading}
-            loadingIndicator="Loading..."
+            loadingIndicator="Enrolling..."
             variant="contained"
           >
-            Fetch data
+            Enroll Now
           </LoadingButton>
         </CardContent>
       </CardActionArea>
@@ -68,85 +79,66 @@ const CourseCard = () => {
   );
 };
 
-const CourseAccordition = () => {
+const CourseAccordition = (props) => {
   return (
     <div>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography variant="subtitle2" gutterBottom component="div">
-            <h4 className="dropdown-title">01 Introduction to ML</h4>
-            <p className="courceDescription m-0">8 Lessons</p>
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert
-              severity="info"
-              icon={<VideoLibraryIcon fontSize="small" />}
-              action={
-                <Button color="inherit" size="small">
-                  2.48 Minutes
-                </Button>
-              }
-            >
-              Introduction To Machine Learning!
-            </Alert>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography variant="subtitle2" gutterBottom component="div">
-            <h4 className="dropdown-title">01 Introduction to ML</h4>
-            <p className="courceDescription m-0">8 Lessons</p>
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert
-              severity="info"
-              icon={<VideoLibraryIcon fontSize="small" />}
-              action={
-                <Button color="inherit" size="small">
-                  2.48 Minutes
-                </Button>
-              }
-            >
-              Introduction To Machine Learning!
-            </Alert>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+      
+      {props.course.video_content.map((video_section, idx) => (
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography variant="subtitle2" gutterBottom component="div">
+              <h4 className="dropdown-title">
+                {idx + 1 + "   " + video_section.section_title}
+              </h4>
+              <p className="courceDescription m-0">
+                {video_section.videos.length} Lessons
+              </p>
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Stack sx={{ width: "100%" }} spacing={2}>
+              {video_section.videos.map((video) => (
+                <Alert
+                  severity="info"
+                  icon={<VideoLibraryIcon fontSize="small" />}
+                  action={
+                    <Button color="inherit" size="small">
+                      {video.duration} Minutes
+                    </Button>
+                  }
+                >
+                  {video.title}
+                </Alert>
+              ))}
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </div>
   );
 };
 
 function CourseDetails() {
-  const [loading,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { courseName } = useParams();
   const [course, setCourse] = useState({});
 
   const Enroll = async () => {};
 
   useEffect(async () => {
-    const courseResponse = await Get("/api/Courses/GetCourseByName/"+courseName);
+    const courseResponse = await Get(
+      "/api/Courses/GetCourseByName/" + courseName
+    );
     console.log(courseResponse.data);
     if (courseResponse) setCourse(courseResponse.data);
     setLoading(false);
   }, []);
 
-  if(loading)
-  return (
-    <Loader/>
-  )
+  if (loading) return <Loader />;
   return (
     <Container>
       <Container sx={{ display: "flex", padding: 0 }}>
@@ -164,18 +156,10 @@ function CourseDetails() {
             <p>COURSE</p>
             <h2 className="courceTitle">{course.name}</h2>
 
-            <p className="courceDescription">
-              Python can be used on a server to create web applications. Python
-              can be used alongside software to create workflows. Python can
-              connect to database systems. It can also read and modify files.
-              Python can be used to handle big data and perform complex
-              mathematics. Python can be used for rapid prototyping, or for
-              production-ready software development.
-            </p>
+            <p className="courceDescription">{course.description}</p>
 
-            {
-              course.cos.map(co=>(
-                <Alert
+            {course.cos.map((co) => (
+              <Alert
                 sx={{
                   backgroundColor: "inherit",
                   padding: 0,
@@ -188,11 +172,10 @@ function CourseDetails() {
               >
                 {co}
               </Alert>
-              ))
-            }
-           
+            ))}
+
             <h4 className="subtitle">Syllabus</h4>
-            <CourseAccordition />
+            <CourseAccordition course={course} />
             <h4 className="subtitle">Author</h4>
             <div style={{ display: "flex" }}>
               <Avatar
