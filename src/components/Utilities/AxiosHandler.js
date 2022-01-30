@@ -5,7 +5,6 @@ const options = { withCredentials: true, headers: { Authorization: "random" } };
 
 export const Post = async (url, data) => {
   data = {...data,authToken:getAuthCookie()}
-  console.log(data,getAuthCookie())
   try {
     const response = await axios.post(BACKEND_URL + url, data,options);
     return response;

@@ -309,7 +309,9 @@ const General = () => {
 }
 
 const handleNameUpdate = async(name) => {
+  console.log(name);
   var names = name.split(' ');
+  console.log(names);
   const first_name = names.length>=1?names[0]:'';
   const last_name = names.length>=2?names[1]:'';
   const res = await Post('/api/user/updateuseraccount',{first_name:first_name,last_name:last_name});
