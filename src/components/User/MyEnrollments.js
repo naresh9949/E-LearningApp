@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import CourseCard from "./courses/SearchCourseCard";
+import CourseCard from "./../courses/SearchCourseCard";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
-import Spinner from "./SharedComponents/Spinner";
-import { Post } from "./Utilities/AxiosHandler";
+import Spinner from "./../SharedComponents/Spinner";
+import { Post } from "./../Utilities/AxiosHandler";
 
 function SearchList() {
   const [courses, setCourses] = useState([]);

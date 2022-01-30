@@ -9,12 +9,11 @@ import { Container } from "@mui/material";
 import Courses from './components/courses/Courses';
 import SearchList from './components/SearchList';
 import Footer from "./components/Footer";
-import MyAccout from './components/MyAccout'
+import MyAccout from './components/User/MyAccout'
 import Login from './components/Auth/Signin';
 import Signup from './components/Auth/Signup'
-import MyEnrollments from './components/MyEnrollments';
-import ContactUs from './components/Contactus';
-import UploadScreen from './components/UploadScreen';
+import MyEnrollments from './components/User/MyEnrollments';
+import ContactUs from './components/GerneralScreens/Contactus';
 import CourseDetails from './components/courses/CourseDetails';
 import TakeQuiz from './components/Quiz/TakeQuiz';
 import CreateQuiz from './components/Quiz/CreateQuiz';
@@ -26,7 +25,8 @@ import Cookies from 'universal-cookie';
 import {setUser,getUser} from './components/Utilities/UserHandler';
 import {Post} from './components/Utilities/AxiosHandler';
 import Spinner from './components/SharedComponents/Spinner';
-
+import TermsAndConditions from "./components/GerneralScreens/TermsAndConditions";
+import PageNotFound from "./components/PageNotFound";
 const getUrl = () => {
   return window.location.pathname;
 }
@@ -134,13 +134,19 @@ function App() {
           <Route path="/user/account" element={<MyAccout/>} />
           <Route path="/courseplayer/:courseName" element={<CoursePlayer />} />
           <Route path="/course/:courseName" element={<CourseDetails />} />
-          <Route path="/admin/upload-course" element={<UploadScreen />} />
           <Route path="/tests" element={<Courses />} />
           <Route path="/quiz/take-quiz" element={<TakeQuiz />} />
           <Route path="/quiz/create-quiz" element={<CreateQuiz />} />
           <Route path="/user/enroll" element={<EnrollUser />} />
           <Route path="/user/verify/:id" element={<VerifyUser />} /> 
           
+          {/** General Screen Routes  */}
+
+          <Route path="/terms-of-service" element={<TermsAndConditions />} /> 
+
+           {/** 404  */}
+
+           <Route path="*" element={<PageNotFound />} /> 
         </Routes>
       </BrowserRouter>
       {login && <Footer />}

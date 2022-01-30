@@ -5,6 +5,7 @@ import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import logo from './../images/logo.png';
 
 function Footer() {
   return (
@@ -12,7 +13,7 @@ function Footer() {
       <div className="row">
         <div className="col">
           <img
-            src="https://e7.pngegg.com/pngimages/479/1015/png-clipart-instagram-logo-social-media-logo-computer-icons-business-sharing-insta-magenta-internet.png"
+            src={logo}
             alt=""
             className="footer-logo"
           />
@@ -53,7 +54,7 @@ function Footer() {
             <a href="/contactus">Contact Us</a>
           </p>
           <p>
-            <a href="terms-conditions">Terms&Conditions</a>
+            <a href="/terms-of-service">Terms&Conditions</a>
           </p>
         </div>
         <div className="col">
