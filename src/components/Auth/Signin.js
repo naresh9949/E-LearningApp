@@ -20,6 +20,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Spinner from './../SharedComponents/Spinner';
 import {Post} from './../Utilities/AxiosHandler';
+import {setAuthCookie} from './../Utilities/UserHandler';
 import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 
@@ -44,6 +45,7 @@ function Login() {
     }
     const res = await Post('/api/auth/signin',obj);
     console.log(res)
+    setAuthCookie(res.data.token);
     if(res && res.status===200)
       window.location = '/';
     else if(res && res.status===201){
@@ -56,10 +58,10 @@ function Login() {
   const handleGoogleLogin = async (googleData) => {
     setLoading(true)
     const res = await Post("/api/auth/google", { token: googleData.tokenId });
+    setAuthCookie(res.data.token);
     if(res){
-      console.log(res);
       if(res.status===201)
-        window.location = '/user/enroll?email='+res.data.email;
+        window.location = '/user/enroll?email='+"xxxxxx@gmail.com";
 
       if(res.status === 200)
         window.location = '/';
@@ -70,7 +72,6 @@ function Login() {
   const responseFacebook = async(response) => {
     setLoading(true)
     if(response && response.accessToken){
-     
       const obj ={
         token:response.accessToken,
         email:response.email,
@@ -78,11 +79,12 @@ function Login() {
         id:response.id
       }
     const res = await Post('/api/auth/fb',obj);
+    setAuthCookie(res.data.token);
     if(res)
     {
       console.log(response)
       if(res.status===201)
-       window.location = '/user/enroll?email='+response.email;
+       window.location = '/user/enroll?email='+"xxxxxx@gmail.com";
 
       if(res.status === 200)
       window.location = '/';

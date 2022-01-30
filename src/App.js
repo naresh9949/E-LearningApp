@@ -24,7 +24,7 @@ import EnrollUser from './components/Auth/UserDetails';
 import VerifyUser from './components/Auth/VerifyUser';
 import Cookies from 'universal-cookie';
 import {setUser,getUser} from './components/Utilities/UserHandler';
-import {Get} from './components/Utilities/AxiosHandler';
+import {Post} from './components/Utilities/AxiosHandler';
 import Spinner from './components/SharedComponents/Spinner';
 
 const getUrl = () => {
@@ -107,7 +107,9 @@ function App() {
 
   useEffect(async () => {
       if(!cookies.get('user')){
-      const res = await Get('/api/user/getUserInfo');
+      const res = await Post('/api/user/getUserInfo',{});
+      if(res && res.status === 200)
+      setUser(res.data);
       }
       setLoading(false);
   },[])

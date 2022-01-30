@@ -19,7 +19,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Switch from "@mui/material/Switch";
-import {getUser} from './Utilities/UserHandler';
+import {getUser,setUser} from './Utilities/UserHandler';
 import {Post,Get} from './Utilities/AxiosHandler';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -288,7 +288,7 @@ const AccountRow = (props) => {
 
 
 const General = () => {
-  const[user,setUser] = useState(getUser);
+  const[user,setuser] = useState(getUser);
   
   const first_name = user.first_name?user.first_name:'';
   const last_name = user.last_name?user.last_name:'';
@@ -298,12 +298,14 @@ const General = () => {
 
   const handleMobileUpdate = async(mobile) => {
       const res = await Post('/api/user/updateuseraccount',{mobile:mobile});
-      setUser(getUser);
+      setUser(res.data);
+      setuser(res.data);
   }
 
   const handleAddressUpdate = async(address) => {
     const res = await Post('/api/user/updateuseraccount',{address:address});
-    setUser(getUser);
+    setUser(res.data);
+    setuser(res.data);
 }
 
 const handleNameUpdate = async(name) => {
@@ -311,7 +313,8 @@ const handleNameUpdate = async(name) => {
   const first_name = names.length>=1?names[0]:'';
   const last_name = names.length>=2?names[1]:'';
   const res = await Post('/api/user/updateuseraccount',{first_name:first_name,last_name:last_name});
-  setUser(getUser);
+  setUser(res.data);
+  setuser(res.data);
 }
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
@@ -331,13 +334,14 @@ const handleNameUpdate = async(name) => {
 };
 
 const Preferences = () => {
-  const[user,setUser] = useState(getUser);
+  const[user,setuser] = useState(getUser);
   
   const isNotificationsAllowed = user.isNotificationsAllowed;
 
   const handleNotificationUpdate = async(notification) => {
     const res = await Post('/api/user/updateusernotification',{isNotificationsAllowed:notification});
-    setUser(getUser);
+    setUser(res.data);
+    setuser(res.data);
 }
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
@@ -359,16 +363,18 @@ const Preferences = () => {
 };
 
 const Education = () => {
-  const[user,setUser] = useState(getUser);
+  const[user,setuser] = useState(getUser);
 
   const branchHandler = async(branch) => {
     const res = await Post('/api/user/updateuseraccount',{branch:branch});
-    setUser(getUser);
+    setUser(res.data);
+    setuser(res.data);
   }
 
   const instituteHandler = async(institute) => {
     const res = await Post('/api/user/updateuseraccount',{institute_name:institute});
-    setUser(getUser);
+    setUser(res.data);
+    setuser(res.data);
   }
 
   return (

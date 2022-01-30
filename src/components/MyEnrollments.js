@@ -4,14 +4,14 @@ import CourseCard from "./courses/SearchCourseCard";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Spinner from "./SharedComponents/Spinner";
-import { Get } from "./Utilities/AxiosHandler";
+import { Post } from "./Utilities/AxiosHandler";
 
 function SearchList() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
-    const res = await Get("/api/user/myEnrollments");
+    const res = await Post("/api/user/myEnrollments",{});
     if (res && res.status === 200) setCourses(res.data);
     setLoading(false);
   }, []);

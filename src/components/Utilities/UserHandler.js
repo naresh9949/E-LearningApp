@@ -2,12 +2,11 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 export const setUser = (user)=>{
+    if(cookies.get("user")){
+        cookies.remove('user', { path: '/' });
+    }
     const user_obj = JSON.stringify(user);
     cookies.set("user",user_obj);
-}
-
-export const removeUser = ()=>{
-
 }
 
 export const getUser = ()=>{
@@ -16,6 +15,14 @@ export const getUser = ()=>{
     }
     else
         return null;
+}
+
+export const setAuthCookie = (c)=>{
+    cookies.set("authToken",c);
+}
+
+export const getAuthCookie = ()=>{
+    return cookies.get("authToken");
 }
 
 export const logOut = ()=>{
