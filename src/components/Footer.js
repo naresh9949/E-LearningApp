@@ -17,7 +17,7 @@ function Footer() {
             alt=""
             className="footer-logo"
           />
-          <p>Subscripe to our Tutorials</p>
+          <p>QuickLearner.io is a Education site which contains tutorials from the Best Youtube Channels.We provide you a best and easy way to learn something on your own pace. </p>
         </div>
         <div className="col">
           <h3>
@@ -82,7 +82,7 @@ function Footer() {
       </div>
       <hr />
       <p className="copyright">
-        Copyright © 2017-2021 QuickLearner LLC. All rights reserved.
+        Copyright © 2021-2022 QuickLearner.io LLC. All rights reserved.
       </p>
     </footer>
   );

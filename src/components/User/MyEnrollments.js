@@ -3,6 +3,7 @@ import Container from "@mui/material/Container";
 import CourseCard from "./../courses/SearchCourseCard";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
+import CardMedia from '@mui/material/CardMedia';
 import Spinner from "./../SharedComponents/Spinner";
 import { Post } from "./../Utilities/AxiosHandler";
 
@@ -17,6 +18,19 @@ function SearchList() {
   }, []);
 
   if (loading) return <Spinner />;
+
+  if(courses.length===0)
+    return <Container align="center">
+       <Typography className="subtitle" variant="h5" gutterBottom>
+        You don't have any enrolled courses!
+      </Typography>
+       <CardMedia
+        component="img"
+        height="400"
+        image="https://assets.materialup.com/uploads/66fb8bdf-29db-40a2-996b-60f3192ea7f0/preview.png"
+        alt="green iguana"
+      />
+    </Container>
   return (
     <Container>
       <br />

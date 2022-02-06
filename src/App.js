@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React,{useEffect,useState,createContext} from "react";
 import Home from "./components/Home";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -27,12 +27,13 @@ import {Post} from './components/Utilities/AxiosHandler';
 import Spinner from './components/SharedComponents/Spinner';
 import TermsAndConditions from "./components/GerneralScreens/TermsAndConditions";
 import PageNotFound from "./components/PageNotFound";
+export const UserContext = createContext();
 const getUrl = () => {
   return window.location.pathname;
 }
 
-const SayHello = () => {
-  const user = getUser();
+const SayHello = (props) => {
+  const user = props.user;
   const url = getUrl();
 
   const urls = ['/','/courseplayer','/course'];
@@ -89,7 +90,7 @@ if(url === "/contactus")
 
 function App() {
   const [loading, setLoading] = useState(true);
-
+  const [user,setUserObj] = useState(null);
   const cookies = new Cookies();
   const authroutes = ['/signup','/signin']
   const userroutes = ['/my-enrollments','/user/account']
@@ -106,10 +107,10 @@ function App() {
    window.location = '/signin';
 
   useEffect(async () => {
-      if(!cookies.get('user')){
+      if(!user){
       const res = await Post('/api/user/getUserInfo',{});
       if(res && res.status === 200)
-      setUser(res.data);
+      setUserObj(res.data);
       }
       setLoading(false);
   },[])
@@ -119,14 +120,14 @@ function App() {
 
   return (
     <div className="App">
+      <UserContext.Provider value={{user,setUserObj}}>
       {login && <Navbar />}
-      {login && <SayHello />}
+      {login && <SayHello user={user}/>}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<Courses/>} />
           <Route path="/search" element={<SearchList/>} />
-          <Route path="/contactus" element={<ContactUs/>} />
           <Route path="/signin" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
           <Route path="/ForgotPassword" element={<ForgotPassword/>} />
@@ -141,7 +142,9 @@ function App() {
           <Route path="/user/verify/:id" element={<VerifyUser />} /> 
           
           {/** General Screen Routes  */}
+          <Route path="/contactus" element={<ContactUs/>} />
 
+          {/** Security Screen Routes  */}
           <Route path="/terms-of-service" element={<TermsAndConditions />} /> 
 
            {/** 404  */}
@@ -150,6 +153,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       {login && <Footer />}
+      </UserContext.Provider>
     </div>
   );
 }

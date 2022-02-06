@@ -60,11 +60,8 @@ function Login() {
     const res = await Post("/api/auth/google", { token: googleData.tokenId });
     setAuthCookie(res.data.token);
     if(res){
-      if(res.status===201)
-        window.location = '/user/enroll?email='+"xxxxxx@gmail.com";
-
-      if(res.status === 200)
-        window.location = '/';
+      if(res.status === 200 || res.status===201)
+      window.location = '/';
     }
     // store returned user somehow
   };
@@ -82,11 +79,7 @@ function Login() {
     setAuthCookie(res.data.token);
     if(res)
     {
-      console.log(response)
-      if(res.status===201)
-       window.location = '/user/enroll?email='+"xxxxxx@gmail.com";
-
-      if(res.status === 200)
+      if(res.status === 200 || res.status===201)
       window.location = '/';
     }
     }

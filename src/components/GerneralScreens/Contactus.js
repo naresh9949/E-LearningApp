@@ -1,103 +1,137 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import SendIcon from '@mui/icons-material/Send';
-import Typography from "@mui/material/Typography";
-import AddIcCallIcon from "@mui/icons-material/AddIcCall";
-import AttachEmailIcon from '@mui/icons-material/AttachEmail';
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import AlertTitle from "@mui/material/AlertTitle";
-import Alert from "@mui/material/Alert";
-import TextField from '@mui/material/TextField';
+import SendIcon from "@mui/icons-material/Send";
+import TextField from "@mui/material/TextField";
+import {Post} from './../Utilities/AxiosHandler';
 
- function BasicTextFields() {
+function BasicTextFields() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [emailError,setEmailError] = useState({error:false,msg:null}); 
+  const [submitted, setSubmitted] = useState(false);
+
+  function validateEmail(email) 
+    {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+  const handleSend = async() => {
+    if(!validateEmail(email))
+    {
+      setEmailError({
+        error:true,
+        msg:'invalid email'
+      })
+    }else{
+      setEmailError({
+        error:false,
+        msg:null
+      })
+    }
+
+    const obj = {
+      name:name,
+      email:email,
+      subject:message,
+      message:message
+    }
+
+    const res = await Post('/api/feedback/Addfeedback',obj);
+    if(res && res.status === 201)
+      setSubmitted(true);
+
+  };
+
+  if(submitted)
+  return <Container align="center" sx={{paddingTop:10}}>
+    <p>we have received your message. we will get back to you shortly</p>
+  </Container>
+
+
   return (
     <Box
       component="form"
       sx={{
-        '& > :not(style)': { m: 1, width: '30ch' },
+        "& > :not(style)": { m: 1, width: "30ch" },
       }}
       noValidate
       autoComplete="off"
     >
-      <TextField id="outlined-basic" label="Name" variant="outlined" />
-      <TextField id="outlined-basic" label="Email" variant="outlined" />
-      <TextField className="w-100" id="outlined-basic" label="Subject" variant="outlined" />
-      <TextField className="w-100" id="outlined-basic" multiline
-          rows={4} label="Message" variant="outlined" />
-        <Button className="submit-btn" variant="contained" endIcon={<SendIcon />}>send</Button>
+      <TextField
+        id="outlined-basic"
+        label="Name"
+        value={name}
+        onChange={(event) => {
+          setName(event.target.value);
+        }}
+        variant="outlined"
+      />
+      <TextField
+        id="outlined-basic"
+        label="Email"
+        value={email}
+        onChange={(event) => {
+          setEmail(event.target.value);
+        }}
+        variant="outlined"
+        error={emailError.error}
+        helperText={emailError.msg}
+      />
+      <TextField
+        value={subject}
+        className="w-100"
+        id="outlined-basic"
+        label="Subject"
+        variant="outlined"
+        onChange={(event) => {
+          setSubject(event.target.value);
+        }}
+      />
+      <TextField
+        value={message}
+        className="w-100"
+        id="outlined-basic"
+        onChange={(event) => {
+          setMessage(event.target.value);
+        }}
+        multiline
+        rows={4}
+        label="Message"
+        variant="outlined"
+      />
+      <Button variant="contained" onClick={handleSend} >
+        send
+      </Button>
     </Box>
-  );
-}
-
-
-
-function BasicCard() {
-  return (
-   
-      <CardContent>
-        <Alert
-          severity="info"
-          icon={<AddIcCallIcon fontSize="large" />}
-          className="contact-com"
-        >
-          <AlertTitle>
-            {" "}
-            <h3 className="contact-title">Call us</h3>{" "}
-          </AlertTitle>
-          <strong className="qustion">+91 8310946163</strong>
-        </Alert>
-        <br/>
-        <Alert
-          severity="info"
-          icon={<AttachEmailIcon fontSize="large" />}
-          className="contact-com"
-        >
-          <AlertTitle>
-            {" "}
-            <h3 className="contact-title">Email us</h3>{" "}
-          </AlertTitle>
-          <strong className="qustion">example@gmail.com</strong>
-        </Alert>
-        <br/>
-        <Alert
-          severity="info"
-          icon={<AddLocationAltIcon fontSize="large" />}
-          className="contact-com"
-        >
-          <AlertTitle>
-            {" "}
-            <h3 className="contact-title">Address</h3>{" "}
-          </AlertTitle>
-          <strong className="qustion">Not disclosure</strong>
-        </Alert>
-      </CardContent>
-    
   );
 }
 
 function Contactus() {
   return (
     <Container>
-        <br/>
-        <br/>
-        <br/>
+      <br />
+      <br />
+      <br />
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={5}>
-          <BasicCard />
+        <Grid item xs={12} sm={2.5}>
+          &nbsp;
         </Grid>
         <Grid item xs={12} sm={7}>
           <BasicTextFields />
         </Grid>
+        <Grid item xs={12} sm={2.5}>
+          &nbsp;
+        </Grid>
       </Grid>
-      <br/>
-        <br/>
-        <br/>
+      <br />
+      <br />
+      <br />
     </Container>
   );
 }

@@ -9,6 +9,7 @@ import { CardActionArea } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Rating from "@mui/material/Rating";
 import { minHeight } from "@mui/system";
+import ReviewBtn from './SharedComponents/ReviewBtn';
 
 const TesimorialCard = (props) => {
   return (
@@ -50,13 +51,19 @@ function Testimorials(props) {
   return (
     <div className="main-div">
       <Container align="center">
-        <h3 className="home-titles">Happy learners from all over the world</h3>
+        <h3 className="home-titles">Happy Learners</h3>
       </Container>
       <Carousel breakPoints={breakPoints}>
         {props.reviews.map((review) => (
           <TesimorialCard review={review} />
         ))}
       </Carousel>
+      <Container align="center">
+      <br/>
+       <ReviewBtn/>
+       <br/>
+       <br/>
+      </Container>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import Tabs from "@mui/material/Tabs";
 import Autocomplete from "@mui/material/Autocomplete";
 import Tab from "@mui/material/Tab";
@@ -19,12 +19,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Switch from "@mui/material/Switch";
-import {getUser,setUser} from '../Utilities/UserHandler';
 import {Post,Get} from '../Utilities/AxiosHandler';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { UserContext } from "./../../App.js";
 
 
 function EditButton(props) {
@@ -288,35 +288,50 @@ const AccountRow = (props) => {
 
 
 const General = () => {
-  const[user,setuser] = useState(getUser);
+  const {user,setUserObj} = useContext(UserContext);
+  const[cur_user,setUser] = useState(user);
   
-  const first_name = user.first_name?user.first_name:'';
-  const last_name = user.last_name?user.last_name:'';
-  const email = user.email;
-  const mobile = user.mobile;
-  const address = user.address;
+  const first_name = cur_user.first_name?cur_user.first_name:'';
+  const last_name = cur_user.last_name?cur_user.last_name:'';
+  const email = cur_user.email;
+  const mobile = cur_user.mobile;
+  const address = cur_user.address;
 
   const handleMobileUpdate = async(mobile) => {
       const res = await Post('/api/user/updateuseraccount',{mobile:mobile});
-      setUser(res.data);
-      setuser(res.data);
+      if(res && res.status === 201){
+        setUser(res.data);
+        setUserObj(res.data);
+      }else{
+        window.location = '/signin';
+      }
   }
 
   const handleAddressUpdate = async(address) => {
     const res = await Post('/api/user/updateuseraccount',{address:address});
-    setUser(res.data);
-    setuser(res.data);
+    if(res && res.status === 201){
+      setUser(res.data);
+      setUserObj(res.data);
+      }else{
+        window.location = '/signin';
+      }
 }
 
 const handleNameUpdate = async(name) => {
-  console.log(name);
   var names = name.split(' ');
-  console.log(names);
+  
+  if(names[0]===' ')
+    names.shift();
+    console.log(names)
   const first_name = names.length>=1?names[0]:'';
   const last_name = names.length>=2?names[1]:'';
   const res = await Post('/api/user/updateuseraccount',{first_name:first_name,last_name:last_name});
-  setUser(res.data);
-  setuser(res.data);
+  if(res && res.status === 201){
+    setUser(res.data);
+    setUserObj(res.data);
+    }else{
+      window.location = '/signin';
+    }
 }
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
@@ -336,14 +351,19 @@ const handleNameUpdate = async(name) => {
 };
 
 const Preferences = () => {
-  const[user,setuser] = useState(getUser);
   
-  const isNotificationsAllowed = user.isNotificationsAllowed;
+  const {user,setUserObj} = useContext(UserContext);
+  const[cur_user,setUser] = useState(user);
 
   const handleNotificationUpdate = async(notification) => {
     const res = await Post('/api/user/updateusernotification',{isNotificationsAllowed:notification});
-    setUser(res.data);
-    setuser(res.data);
+    console.log(res)
+    if(res && res.status === 201){
+      setUser(res.data);
+      setUserObj(res.data);
+      }else{
+        window.location = '/signin';
+      }
 }
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
@@ -358,33 +378,41 @@ const Preferences = () => {
         title="MARKETING EMAIL NOTIFICATIONS"
         value="Control receiving marketing emails from here"
         handler={handleNotificationUpdate}
-        checked={isNotificationsAllowed}
+        checked={cur_user.isNotificationsAllowed}
       />
     </Stack>
   );
 };
 
 const Education = () => {
-  const[user,setuser] = useState(getUser);
+  const {user,setUserObj} = useContext(UserContext);
+  const[cur_user,setUser] = useState(user);
 
   const branchHandler = async(branch) => {
     const res = await Post('/api/user/updateuseraccount',{branch:branch});
-    setUser(res.data);
-    setuser(res.data);
+    if(res && res.status === 201){
+      setUser(res.data);
+      setUserObj(res.data);
+      }else{
+        window.location = '/signin';
+      }
   }
 
   const instituteHandler = async(institute) => {
     const res = await Post('/api/user/updateuseraccount',{institute_name:institute});
-    setUser(res.data);
-    setuser(res.data);
+    if(res && res.status === 201){
+      setUser(res.data);
+      setUserObj(res.data);
+      }else{
+        window.location = '/signin';
+      }
   }
 
   return (
     <Stack sx={{ width: "100%" }} spacing={2}>
-       <AccountRow branch={true} value={user.branch} title="BRANCH" handler={branchHandler} />
+       <AccountRow branch={true} value={cur_user.branch} title="BRANCH" handler={branchHandler} />
        <hr/>
-      <AccountRow institute={true} title="INSTITUTION NAME" value={user.institute_name} handler={instituteHandler}/>
-      
+      <AccountRow institute={true} title="INSTITUTION NAME" value={cur_user.institute_name} handler={instituteHandler}/>
     </Stack>
   );
 };

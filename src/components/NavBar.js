@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useState} from "react";
+import { useState,useContext} from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,7 +8,7 @@ import { Container } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import InputBase from "@mui/material/InputBase";
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import Badge from "@mui/material/Badge";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import MenuItem from "@mui/material/MenuItem";
@@ -28,8 +28,9 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import ContactPageIcon from '@mui/icons-material/ContactPage';
+import ContactPageIcon from "@mui/icons-material/ContactPage";
 import { getUser, logOut } from "./Utilities/UserHandler";
+import { UserContext } from "./../App.js";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -76,7 +77,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const user = getUser();
+  let {user,setUserObj} = useContext(UserContext);
+  
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -169,15 +171,16 @@ function AccountMenu() {
           </MenuItem>
         )}
         {user && (
-            <MenuItem>
-              <ListItemIcon>
-                <QuizIcon fontSize="small" />
-              </ListItemIcon>
-              <Link href="/my-tests" color="inherit" underline="none">
-                My Tests
-              </Link>
-            </MenuItem>
-          ) }{user && <Divider />}
+          <MenuItem>
+            <ListItemIcon>
+              <QuizIcon fontSize="small" />
+            </ListItemIcon>
+            <Link href="/my-tests" color="inherit" underline="none">
+              My Tests
+            </Link>
+          </MenuItem>
+        )}
+        {user && <Divider />}
         {/** Standard options */}
         <MenuItem>
           <ListItemIcon>
@@ -208,26 +211,27 @@ function AccountMenu() {
 
         <Divider />
         {user && (
-            <MenuItem>
-              <ListItemIcon>
-                <ManageAccountsIcon fontSize="small" />
-              </ListItemIcon>
-              <Link href="/user/account" color="inherit" underline="none">
-                Account
-              </Link>
-            </MenuItem>
-          )}{user && (
-            <MenuItem
-              onClick={() => {
-                logOut();
-              }}
-            >
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          )}
+          <MenuItem>
+            <ListItemIcon>
+              <ManageAccountsIcon fontSize="small" />
+            </ListItemIcon>
+            <Link href="/user/account" color="inherit" underline="none">
+              Account
+            </Link>
+          </MenuItem>
+        )}
+        {user && (
+          <MenuItem
+            onClick={() => {
+              logOut();
+            }}
+          >
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        )}
 
         {!user && (
           <MenuItem>
@@ -247,7 +251,7 @@ function AccountMenu() {
 function DesktopUserMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const user = getUser();
+  const {user,setUserObj} = useContext(UserContext);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -370,13 +374,13 @@ function DesktopUserMenu() {
 }
 
 export default function PrimarySearchAppBar() {
-  const [search,setSearch] = useState('');
-  const user = getUser();
+  const [search, setSearch] = useState("");
+  const {user,setUserObj} = useContext(UserContext);
   const handleKeyDown = (event) => {
-    if(event.key==='Enter')
-      window.location = '/search?search_query='+search;
-  }
-  
+    if (event.key === "Enter")
+      window.location = "/search?search_query=" + search;
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -384,17 +388,21 @@ export default function PrimarySearchAppBar() {
         sx={{ backgroundColor: "white", color: "black" }}
       >
         <Toolbar>
-          <Avatar alt="logo" src={logo} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-           <span> QuickLearner.io </span>
-          </Typography>
+          <Link href="/" underline="none">
+            <Avatar alt="logo" src={logo} />
+          </Link>
 
-          
+          <Link href="/" color="inherit" underline="none">
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              <span> QuickLearner.io </span>
+            </Typography>
+          </Link>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -402,12 +410,15 @@ export default function PrimarySearchAppBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={(event)=>{setSearch(event.target.value)}}
+              onChange={(event) => {
+                setSearch(event.target.value);
+              }}
               value={search}
-              onKeyDown = {handleKeyDown}
+              onKeyDown={handleKeyDown}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
+
           <Link
             href="/courses"
             underline="none"
@@ -419,34 +430,32 @@ export default function PrimarySearchAppBar() {
           >
             Courses
           </Link>
+
           <Link
-            href="#"
+            href="/blogs"
             underline="none"
-            sx={{ marginRight: 4, display: { xs: "none", sm: "block" } }}
+            sx={{
+              marginRight: 4,
+              display: { xs: "none", sm: "block" },
+              color: "black",
+            }}
           >
-            About us
-          </Link>
-          <Link
-            href="#"
-            underline="none"
-            sx={{ marginRight: 4, display: { xs: "none", sm: "block" } }}
-          >
-            Contact us
+            Blogs
           </Link>
 
-          {/* <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <Avatar sx={{ bgcolor: 'black' }}>NK</Avatar>
-            </IconButton>
-          </Box> */}
+          <Link
+            href="/tests"
+            underline="none"
+            sx={{
+              marginRight: 4,
+              display: { xs: "none", sm: "block" },
+              color: "black",
+            }}
+          >
+            Tests
+          </Link>
+
+          
           {user && <DesktopUserMenu />}
           {!user && (
             <Link

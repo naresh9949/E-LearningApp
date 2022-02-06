@@ -201,8 +201,11 @@ function Home(props) {
 
   useEffect(async() => {
         const reviewsResponse = await Get("/api/review/getReviews");
+        if(reviewsResponse)
         setReviews(reviewsResponse.data);
+
         const coursesResponse = await Get("/api/courses/getPopularCourses");
+        if(coursesResponse)
         setCourses(coursesResponse.data)
         setLoading(false);
   },[]);

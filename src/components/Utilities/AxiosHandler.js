@@ -20,10 +20,7 @@ export const Patch = async (url, data) => {
     const response = await axios.patch(BACKEND_URL + url, data,options);
     return response;
   } catch (err) {
-    const msg = err.toString();
-    if(msg==='Error: Request failed with status code 401')
-      window.location = '/signin';
-    return null;
+  return null;
   }
   
 };

@@ -35,6 +35,8 @@ const CourseCard = (props) => {
     console.log(res)
     if(res && res.status===200)
       window.location = '/courseplayer/'+props.course.name;
+    else
+      window.location = '/signup';
   }
 
 
