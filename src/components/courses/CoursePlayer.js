@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import Container from "@mui/material/Container";
 import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
 import Link from "@mui/material/Link";
@@ -29,11 +29,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useParams } from "react-router-dom";
 import Spinner from "./../SharedComponents/Spinner";
+import Loader from "./../SharedComponents/Loader";
 import { Get, Post } from "./../Utilities/AxiosHandler";
 import JoditEditor from "jodit-react";
+import { UserContext } from "./../../App.js";
+import { useTheme } from "styled-components";
 
-const ReplyForm = () => {
+const ReplyForm = (props) => {
   const [open, setOpen] = React.useState(false);
+  const [text, setText] = React.useState("");
+  const courseId = props.courseId;
+  const user = props.user;
+  const commentId = props.commentId;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,17 +50,34 @@ const ReplyForm = () => {
     setOpen(false);
   };
 
+  const reply = async () => {
+    const obj = {
+      courseId: courseId,
+      commentId: commentId,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      image: user.image ? user.image : null,
+      userId: user._id,
+      comment: text,
+    };
+
+    const res = await Post("/api/Courses/addReply", obj);
+    if (res && res.status === 201) setOpen(false);
+  };
   return (
-    <div>
+    <React.Fragment>
       <Button sx={{ color: "black" }} onClick={handleClickOpen}>
         What to Reply?
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} fullWidth onClose={handleClose}>
         <DialogTitle>Reply</DialogTitle>
-        <DialogContent sx={{ width: "500px" }}>
+        <DialogContent>
           <br />
           <TextField
             id="outlined-multiline-static"
+            onChange={(event) => {
+              setText(event.target.value);
+            }}
             fullWidth
             multiline
             rows={4}
@@ -64,42 +88,36 @@ const ReplyForm = () => {
           <Button variant="contained" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleClose}>
+          <Button variant="contained" onClick={reply}>
             reply
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 };
 
-const About = () => {
+const About = (props) => {
+  const course = props.course;
+
   return (
     <div>
       <p>COURSE</p>
-      <h2 className="courceTitle">
-        Introduction to MachineLearning using Python
-      </h2>
+      <h2 className="courceTitle">{course.name}</h2>
 
-      <p className="courceDescription">
-        Python can be used on a server to create web applications. Python can be
-        used alongside software to create workflows. Python can connect to
-        database systems. It can also read and modify files. Python can be used
-        to handle big data and perform complex mathematics. Python can be used
-        for rapid prototyping, or for production-ready software development.
-      </p>
+      <p className="courceDescription">{course.description}</p>
 
       <h4 className="subtitle">Author</h4>
       <div style={{ display: "flex" }}>
         <Avatar
-          alt="Hitesh"
+          alt={course.channelName}
           src="https://cliply.co/wp-content/uploads/2019/04/371903520_SOCIAL_ICONS_YOUTUBE.png"
           sx={{ width: 56, height: 56, backgroundColor: "red" }}
         />
         <h3>
           &nbsp;&nbsp;
           <Link href="#" underline="none">
-            LearnCodeOnline
+            {course.channelName}
           </Link>
         </h3>
       </div>
@@ -107,64 +125,156 @@ const About = () => {
   );
 };
 
-const Answer = () => {
+const Answer = (props) => {
   return (
-    <div style={{ display: "flex" }}>
-      <Avatar sx={{ padding: 0, marginRight: 1, marginTop: 1, bgcolor: "red" }}>
-        N
-      </Avatar>
-      <div style={{ display: "block", padding: 0 }}>
-        <p>
-          Naresh Kollipora
-          <span>&nbsp;</span>
-          <span className="instructor">Instructor</span>
-        </p>
-
-        <p className="qustion">What are the routes we can here?</p>
-      </div>
-    </div>
+    <React.Fragment>
+      {props.replies.map((reply) => (
+        <React.Fragment>
+        <div style={{ display: "flex" }}>
+          <Avatar
+            sx={{ width: 36, height: 36 }}
+            alt={reply.first_name + " " + reply.last_name}
+            src={reply.image}
+          />
+          <div style={{ display: "block", padding: 0 }}>
+            <Typography sx={{ marginTop: 0.5, marginLeft: 1 }}>
+              <span>{reply.first_name + " " + reply.last_name}</span>
+            </Typography>
+            
+            <Typography>{reply.comment}</Typography>
+          </div>
+          
+        </div>
+        <br/>
+        </React.Fragment>
+      ))}
+    </React.Fragment>
   );
 };
 
-const Discussions = () => {
+const Discussions = (props) => {
+  const [text, setText] = React.useState("");
+  const { user, setUserObj } = useContext(UserContext);
+  const comments = props.comments;
+  console.log(comments);
+  const saveQuistion = async () => {
+    if (!user) window.location = "/signin";
+
+    const obj = {
+      first_name: user.first_name,
+      last_name: user.last_name,
+      image: user.image ? user.image : null,
+      courseId: props.id,
+      userId: user._id,
+      comment: text,
+    };
+
+    const res = await Post("/api/Courses/addComment", obj);
+    if (res && res.status === 201) setText("");
+  };
+
   return (
     <div>
-      <div style={{ display: "flex" }}>
-        <Avatar
-          sx={{ padding: 0, marginRight: 1, marginTop: 1, bgcolor: "red" }}
-        >
-          N
-        </Avatar>
-        <div style={{ display: "block", padding: 0 }}>
-          <p>
-            Naresh Kollipora
-            <span>&nbsp;</span>
-            <span className="instructor">Instructor</span>
-            <span>
-              <ReplyForm />
-            </span>
-          </p>
+      <Grid container spacing={2}>
+        <Grid item xs={10}>
+          <TextField
+            fullWidth
+            size="small"
+            onChange={(event) => {
+              setText(event.target.value);
+            }}
+            id="outlined-basic"
+            label="Ask a Question"
+            variant="outlined"
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <Button onClick={saveQuistion} variant="contained">
+            Ask
+          </Button>
+        </Grid>
+      </Grid>
+      <br />
+      {comments.map((comment) => (
+        <React.Fragment>
+        <div style={{ display: "flex" }}>
+          <Avatar
+            sx={{ width: 36, height: 36 }}
+            alt={comment.first_name + " " + comment.last_name}
+            src={comment.image}
+          />
+          <div style={{ display: "block", padding: 0 }}>
+            <Typography sx={{ marginTop: 0.5, marginLeft: 1 }}>
+              <span>{comment.first_name + " " + comment.last_name}</span>
+              <span>
+                <ReplyForm
+                  commentId={comment._id}
+                  courseId={props.id}
+                  user={user}
+                />
+              </span>
+            </Typography>
 
-          <p>What are the routes we can here?</p>
-          <Answer />
+            <Typography>
+              {" "}
+              <span>{comment.comment}</span>
+            </Typography>
+            <br/>
+            <Answer replies={comment.replies} />
+          </div>
         </div>
-      </div>
+        <hr/>
+        </React.Fragment>
+      ))}
     </div>
   );
 };
 
-const TextEditor = () => {
+const TextEditor = (props) => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
+  const [oldcontent, setOldContent] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [color, setColor] = useState("primary");
 
   const config = {
     readonly: false, // all options from https://xdsoft.net/jodit/doc/
   };
+  const saveNotes = async() =>{
+    const obj = {
+      courseId : props.courseId,
+      content : content
+    }
+    const res = await Post('/api/user/addNote',obj);
+    if(res && res.status === 201)
+      setColor("primary");
+    
+  }
+
+  useEffect(async () => {
+    const obj = {
+      courseId : props.courseId,
+    }
+    const res = await Post('/api/user/getNote',obj);
+    if(res && res.status === 200){
+      setContent(res.data);
+      setOldContent(res.data);
+      setLoading(false);
+    }
+
+    if(content===oldcontent)
+      setColor("primary");
+    
+  },[])
+
+  if(loading)
+    return <Loader/>
+
   return (
     <Container fixed sx={{ backgroundColor: "#F5F5F5" }}>
       <Alert
         action={
-          <Button size="small" variant="contained">
+          <Button size="small" color={color} onClick={saveNotes} variant="contained">
             Save
           </Button>
         }
@@ -180,7 +290,10 @@ const TextEditor = () => {
         tabIndex={1} // tabIndex of textarea
         onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
         onChange={(newContent) => {
-          console.log(newContent);
+          if(content===oldcontent)
+              setColor("primary");
+          else
+            setColor("secondary");
         }}
       />
     </Container>
@@ -189,7 +302,6 @@ const TextEditor = () => {
 
 const BottamTabs = (props) => {
   const [value, setValue] = React.useState("1");
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -205,13 +317,13 @@ const BottamTabs = (props) => {
           </TabList>
         </Box>
         <TabPanel value="1">
-          <About />
+          <About course={props.course} />
         </TabPanel>
         <TabPanel value="2">
-          <Discussions />
+          <Discussions id={props.course._id} comments={props.course.comments} />
         </TabPanel>
         <TabPanel value="3">
-          <TextEditor />
+          <TextEditor courseId={props.course._id} />
         </TabPanel>
       </TabContext>
     </Box>
@@ -287,30 +399,31 @@ function CoursePlayer() {
   const [course, setCourse] = React.useState(null);
   const [videoId, setVideoId] = React.useState("");
   const [videos, setVideos] = React.useState([]);
+  const [percentage, setPercentage] = React.useState(null);
   const { courseName } = useParams();
 
   const playNextVideo = async () => {
     const idx = videos.indexOf(videoId);
     if (idx + 1 < videos.length) setVideoId(videos[idx + 1]);
-    console.log("res");
     const res = await Post("/api/user/addVideo", {
       courseId: course._id,
       videoId: videoId,
     });
-    console.log(res);
+    if(res && res.status === 201)
+      setPercentage(res.data);
   };
 
   const opts = {
     height: "450",
     width: "100%",
     playerVars: {
-      autoplay: 0,
+      autoplay: 1,
     },
   };
 
   useEffect(async () => {
-    const res = await Get("/api/Courses/GetCourseByName/" + courseName);
-
+    const res = await Get("/api/Courses/GetCoursePlayer/" + courseName);
+    console.log(res.data);
     if (res && res.status === 200) setCourse(res.data);
 
     const video_content = res.data.video_content;
@@ -343,7 +456,7 @@ function CoursePlayer() {
       </Grid>
       <Grid item xs={12} sm={4}>
         <Container sx={{ padding: 2 }}>
-          <LinearProgressWithLabel value={45} />
+          <LinearProgressWithLabel value={percentage} />
         </Container>
         <CourseAccordition course={course} handler={setVideoId} />
       </Grid>

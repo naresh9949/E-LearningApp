@@ -48,7 +48,7 @@ function Footer() {
             <a href="/CreateQuiz">CreateQuiz</a>
           </p>
           <p>
-            <a href="/">Aboutus</a>
+            <a href="/developers">Team</a>
           </p>
           <p>
             <a href="/contactus">Contact Us</a>

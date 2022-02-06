@@ -27,6 +27,7 @@ import {Post} from './components/Utilities/AxiosHandler';
 import Spinner from './components/SharedComponents/Spinner';
 import TermsAndConditions from "./components/GerneralScreens/TermsAndConditions";
 import PageNotFound from "./components/PageNotFound";
+import Developers from "./components/GerneralScreens/Developers";
 export const UserContext = createContext();
 const getUrl = () => {
   return window.location.pathname;
@@ -143,6 +144,7 @@ function App() {
           
           {/** General Screen Routes  */}
           <Route path="/contactus" element={<ContactUs/>} />
+          <Route path="/developers" element={<Developers/>} />
 
           {/** Security Screen Routes  */}
           <Route path="/terms-of-service" element={<TermsAndConditions />} /> 
