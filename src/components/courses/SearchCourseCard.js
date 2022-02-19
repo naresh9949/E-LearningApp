@@ -36,7 +36,7 @@ export default function SearchCourseCard(props) {
   const youtubeLink = props.youtubeLink;
   const lesson = props.lesson;
   const path = props.path;
-  const progress = props.progress ? props.progress : null;
+  const progress = props.progress;
   console.log(isMobile);
   //choose the screen size
 
@@ -71,7 +71,7 @@ export default function SearchCourseCard(props) {
       </Typography>
       </Stack>
       </Typography>
-      {progress && <LinearProgressWithLabel value={progress}/>}
+      {progress!==null && <LinearProgressWithLabel value={progress}/>}
       <Typography variant="body1" gutterBottom>
         {lesson} Lessons
       </Typography>

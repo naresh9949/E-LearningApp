@@ -130,22 +130,21 @@ const Answer = (props) => {
     <React.Fragment>
       {props.replies.map((reply) => (
         <React.Fragment>
-        <div style={{ display: "flex" }}>
-          <Avatar
-            sx={{ width: 36, height: 36 }}
-            alt={reply.first_name + " " + reply.last_name}
-            src={reply.image}
-          />
-          <div style={{ display: "block", padding: 0 }}>
-            <Typography sx={{ marginTop: 0.5, marginLeft: 1 }}>
-              <span>{reply.first_name + " " + reply.last_name}</span>
-            </Typography>
-            
-            <Typography>{reply.comment}</Typography>
+          <div style={{ display: "flex" }}>
+            <Avatar
+              sx={{ width: 36, height: 36 }}
+              alt={reply.first_name + " " + reply.last_name}
+              src={reply.image}
+            />
+            <div style={{ display: "block", padding: 0 }}>
+              <Typography sx={{ marginTop: 0.5, marginLeft: 1 }}>
+                <span>{reply.first_name + " " + reply.last_name}</span>
+              </Typography>
+
+              <Typography>{reply.comment}</Typography>
+            </div>
           </div>
-          
-        </div>
-        <br/>
+          <br />
         </React.Fragment>
       ))}
     </React.Fragment>
@@ -197,33 +196,33 @@ const Discussions = (props) => {
       <br />
       {comments.map((comment) => (
         <React.Fragment>
-        <div style={{ display: "flex" }}>
-          <Avatar
-            sx={{ width: 36, height: 36 }}
-            alt={comment.first_name + " " + comment.last_name}
-            src={comment.image}
-          />
-          <div style={{ display: "block", padding: 0 }}>
-            <Typography sx={{ marginTop: 0.5, marginLeft: 1 }}>
-              <span>{comment.first_name + " " + comment.last_name}</span>
-              <span>
-                <ReplyForm
-                  commentId={comment._id}
-                  courseId={props.id}
-                  user={user}
-                />
-              </span>
-            </Typography>
+          <div style={{ display: "flex" }}>
+            <Avatar
+              sx={{ width: 36, height: 36 }}
+              alt={comment.first_name + " " + comment.last_name}
+              src={comment.image}
+            />
+            <div style={{ display: "block", padding: 0 }}>
+              <Typography sx={{ marginTop: 0.5, marginLeft: 1 }}>
+                <span>{comment.first_name + " " + comment.last_name}</span>
+                <span>
+                  <ReplyForm
+                    commentId={comment._id}
+                    courseId={props.id}
+                    user={user}
+                  />
+                </span>
+              </Typography>
 
-            <Typography>
-              {" "}
-              <span>{comment.comment}</span>
-            </Typography>
-            <br/>
-            <Answer replies={comment.replies} />
+              <Typography>
+                {" "}
+                <span>{comment.comment}</span>
+              </Typography>
+              <br />
+              <Answer replies={comment.replies} />
+            </div>
           </div>
-        </div>
-        <hr/>
+          <hr />
         </React.Fragment>
       ))}
     </div>
@@ -240,41 +239,41 @@ const TextEditor = (props) => {
   const config = {
     readonly: false, // all options from https://xdsoft.net/jodit/doc/
   };
-  const saveNotes = async() =>{
+  const saveNotes = async () => {
     const obj = {
-      courseId : props.courseId,
-      content : content
-    }
-    const res = await Post('/api/user/addNote',obj);
-    if(res && res.status === 201)
-      setColor("primary");
-    
-  }
+      courseId: props.courseId,
+      content: content,
+    };
+    const res = await Post("/api/user/addNote", obj);
+    if (res && res.status === 201) setColor("primary");
+  };
 
   useEffect(async () => {
     const obj = {
-      courseId : props.courseId,
-    }
-    const res = await Post('/api/user/getNote',obj);
-    if(res && res.status === 200){
+      courseId: props.courseId,
+    };
+    const res = await Post("/api/user/getNote", obj);
+    if (res && res.status === 200) {
       setContent(res.data);
       setOldContent(res.data);
       setLoading(false);
     }
 
-    if(content===oldcontent)
-      setColor("primary");
-    
-  },[])
+    if (content === oldcontent) setColor("primary");
+  }, []);
 
-  if(loading)
-    return <Loader/>
+  if (loading) return <Loader />;
 
   return (
     <Container fixed sx={{ backgroundColor: "#F5F5F5" }}>
       <Alert
         action={
-          <Button size="small" color={color} onClick={saveNotes} variant="contained">
+          <Button
+            size="small"
+            color={color}
+            onClick={saveNotes}
+            variant="contained"
+          >
             Save
           </Button>
         }
@@ -290,10 +289,8 @@ const TextEditor = (props) => {
         tabIndex={1} // tabIndex of textarea
         onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
         onChange={(newContent) => {
-          if(content===oldcontent)
-              setColor("primary");
-          else
-            setColor("secondary");
+          if (content === oldcontent) setColor("primary");
+          else setColor("secondary");
         }}
       />
     </Container>
@@ -350,18 +347,52 @@ LinearProgressWithLabel.propTypes = {
 };
 
 const CourseAccordition = (props) => {
+  const video_content = props.course.video_content
+    ? props.course.video_content
+    : [];
+  const isSubArray = (A, B)=> {
+    // Two pointers to traverse the arrays
+    var list = [];
+    for(let i=0;i<B.length;i++)
+    {
+      list.push(B[i].videoId);
+    }
+    B = list;
+  
+   
+    var n = A.length,
+      m = B.length;
+    let flag = B.length;
+    for(let i=0;i<n;i++)
+    {
+      for(let j=0;j<m;j++){
+        if(A[i]==B[j])
+        flag=flag-1;
+      }
+      
+    }
+
+    if(flag==0) return true;
+    else return false;
+
+    
+  }
+
+  console.log(isSubArray(props.course.videos,props.course.video_content[0].videos))
+
   return (
     <div style={{ height: "100vh", position: "relative", overflow: "scroll" }}>
-      {props.course.video_content.map((video_section, idx) => (
+      {video_content.map((video_section, idx) => (
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography variant="subtitle2" gutterBottom component="div">
+            <Typography variant="subtitle2" sx={{color: isSubArray(props.course.videos,video_section.videos)?"green":"black" }} gutterBottom component="div">
               <h4 className="dropdown-title">
                 {idx + 1 + "   " + video_section.section_title}
+              
               </h4>
               <p className="courceDescription m-0">
                 {video_section.videos.length} Lessons
@@ -372,7 +403,11 @@ const CourseAccordition = (props) => {
             <Stack sx={{ width: "100%" }} spacing={2}>
               {video_section.videos.map((video) => (
                 <Alert
-                  severity="info"
+                  severity={
+                    props.course.videos.includes(video.videoId)
+                      ? "success"
+                      : "info"
+                  }
                   icon={<VideoLibraryIcon fontSize="small" />}
                   onClick={() => props.handler(video.videoId)}
                   action={
@@ -396,7 +431,7 @@ const CourseAccordition = (props) => {
 
 function CoursePlayer() {
   const [loading, setLoading] = React.useState(true);
-  const [course, setCourse] = React.useState(null);
+  const [course, setCourse] = React.useState({});
   const [videoId, setVideoId] = React.useState("");
   const [videos, setVideos] = React.useState([]);
   const [percentage, setPercentage] = React.useState(null);
@@ -409,8 +444,11 @@ function CoursePlayer() {
       courseId: course._id,
       videoId: videoId,
     });
-    if(res && res.status === 201)
+    if (res && res.status === 201) {
       setPercentage(res.data);
+      course.videos.push(videoId);
+      setCourse({ ...course });
+    }
   };
 
   const opts = {
@@ -422,22 +460,29 @@ function CoursePlayer() {
   };
 
   useEffect(async () => {
-    const res = await Get("/api/Courses/GetCoursePlayer/" + courseName);
+    const res = await Post("/api/Courses/GetCoursePlayer/" + courseName, {});
     console.log(res.data);
-    if (res && res.status === 200) setCourse(res.data);
+    if (
+      res &&
+      res.status === 202 &&
+      res.data.message === "course is not Enrolled"
+    )
+      window.location = "/course/" + courseName;
+    if (res && res.status === 200) {
+      setCourse(res.data);
+      setPercentage(res.data.percentage);
+      const video_content = res.data.video_content;
+      var videos = [];
 
-    const video_content = res.data.video_content;
-    var videos = [];
-
-    for (let i = 0; i < video_content.length; i++) {
-      for (let j = 0; j < video_content[i].videos.length; j++) {
-        videos.push(video_content[i].videos[j].videoId);
+      for (let i = 0; i < video_content.length; i++) {
+        for (let j = 0; j < video_content[i].videos.length; j++) {
+          videos.push(video_content[i].videos[j].videoId);
+        }
       }
+
+      setVideos(videos);
+      setVideoId(videos[0]);
     }
-
-    setVideos(videos);
-    setVideoId(videos[0]);
-
     setLoading(false);
   }, []);
 

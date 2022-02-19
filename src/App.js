@@ -1,34 +1,112 @@
-import React,{useEffect,useState,createContext} from "react";
+import React,{useEffect,useState,createContext,Suspense} from "react";
 import Home from "./components/Home";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
-import CoursePlayer from "./components/courses/CoursePlayer";
 import { Container } from "@mui/material";
-import Courses from './components/courses/Courses';
-import SearchList from './components/SearchList';
 import Footer from "./components/Footer";
-import MyAccout from './components/User/MyAccout'
-import Login from './components/Auth/Signin';
-import Signup from './components/Auth/Signup'
-import MyEnrollments from './components/User/MyEnrollments';
-import ContactUs from './components/GerneralScreens/Contactus';
-import CourseDetails from './components/courses/CourseDetails';
-import TakeQuiz from './components/Quiz/TakeQuiz';
-import CreateQuiz from './components/Quiz/CreateQuiz';
-import Quizzes from './components/Quiz/Quizzes';
-import ForgotPassword from './components/Auth/ForgotPassword';
-import EnrollUser from './components/Auth/UserDetails';
-import VerifyUser from './components/Auth/VerifyUser';
 import Cookies from 'universal-cookie';
 import {setUser,getUser} from './components/Utilities/UserHandler';
 import {Post} from './components/Utilities/AxiosHandler';
 import Spinner from './components/SharedComponents/Spinner';
-import TermsAndConditions from "./components/GerneralScreens/TermsAndConditions";
-import PageNotFound from "./components/PageNotFound";
-import Developers from "./components/GerneralScreens/Developers";
+import Loader from "./components/SharedComponents/Loader";
 export const UserContext = createContext();
+
+
+const CoursePlayer = React.lazy(() =>
+  import("./components/courses/CoursePlayer")
+);
+
+const Courses = React.lazy(() =>
+  import("./components/courses/Courses")
+);
+
+const SearchList = React.lazy(() =>
+  import("./components/SearchList")
+);
+
+const MyAccout = React.lazy(() =>
+  import("./components/User/MyAccout")
+);
+
+const Login = React.lazy(() =>
+  import("./components/Auth/Signin")
+);
+
+
+const Signup = React.lazy(() =>
+  import("./components/Auth/Signup")
+);
+
+
+const MyEnrollments = React.lazy(() =>
+  import("./components/User/MyEnrollments")
+);
+
+
+const ContactUs = React.lazy(() =>
+  import("./components/GerneralScreens/Contactus")
+);
+
+
+const CourseDetails = React.lazy(() =>
+  import("./components/courses/CourseDetails")
+);
+
+
+
+const TakeQuiz = React.lazy(() =>
+  import("./components/Quiz/TakeQuiz")
+);
+
+
+
+
+const CreateQuiz = React.lazy(() =>
+  import("./components/Quiz/CreateQuiz")
+);
+
+
+
+const Quizzes = React.lazy(() =>
+  import("./components/Quiz/Quizzes")
+);
+
+
+
+const ForgotPassword = React.lazy(() =>
+  import("./components/Auth/ForgotPassword")
+);
+
+
+
+const EnrollUser = React.lazy(() =>
+  import("./components/Auth/UserDetails")
+);
+
+
+const VerifyUser = React.lazy(() =>
+  import("./components/Auth/VerifyUser")
+);
+
+const TermsAndConditions = React.lazy(() =>
+  import("./components/GerneralScreens/TermsAndConditions")
+);
+
+const PageNotFound = React.lazy(() =>
+  import("./components/PageNotFound")
+);
+
+
+const Developers = React.lazy(() =>
+  import("./components/GerneralScreens/Developers")
+);
+
+
+
+
+
 const getUrl = () => {
   return window.location.pathname;
 }
@@ -124,6 +202,7 @@ function App() {
       <UserContext.Provider value={{user,setUserObj}}>
       {login && <Navbar />}
       {login && <SayHello user={user}/>}
+      <Suspense fallback={<Loader />}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -154,6 +233,7 @@ function App() {
            <Route path="*" element={<PageNotFound />} /> 
         </Routes>
       </BrowserRouter>
+      </Suspense>
       {login && <Footer />}
       </UserContext.Provider>
     </div>

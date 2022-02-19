@@ -13,6 +13,7 @@ function SearchList() {
 
   useEffect(async () => {
     const res = await Post("/api/user/myEnrollments",{});
+    console.log(res)
     if (res && res.status === 200) setCourses(res.data);
     setLoading(false);
   }, []);
@@ -45,8 +46,8 @@ function SearchList() {
           image={course.image}
           path={"/courseplayer/"+course.name}
           youtubeName={course.channelName}
-          lesson={24}
-          progress={34}
+          lesson={course.classes}
+          progress={course.percentage}
         />
         
       ))}
